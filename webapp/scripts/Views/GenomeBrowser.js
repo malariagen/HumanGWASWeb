@@ -27,7 +27,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         serverURL: serverUrl,
                         chromnrfield: 'chrom',
 //                        chromoIdField: 'chromid',//set this to use chromosome id's
-                        annotTableName: 'henb37annot',
+                        annotTableName: 'annotation_tbl',
                         viewID: 'GenomeBrowser',
                         database: MetaData.database,
                         annotationChannelHeight: 100
@@ -51,7 +51,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         that.panelBrowser.addChromosome(chromo.id, chromo.id, chromo.len);
                     });
 
-//                    this.createSNPChannels();
+                    this.createSNPChannels();
 
                     this.createProfileChannels();
 
@@ -140,7 +140,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     //this.dataFetcherProfiles.translateChromoId = function (inp) { return 'chr' + inp; } //This translates from numerical chromosome ID's to chrXXX ID's. NOTE !!! : need better method in case of X,Y chromosomes
                     this.panelBrowser.addDataFetcher(this.dataFetcherProfiles);
 
-                    var folder = 'HumanGWAS/Signif'
+                    var folder = 'FilterBank/Signif'
 
                     var ID = 'pval';
 
