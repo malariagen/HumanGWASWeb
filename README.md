@@ -1,3 +1,3 @@
 HumanGWASWeb
 ============
-Web application for browsing GWAS data
+A web application for browsing GWAS data
