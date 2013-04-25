@@ -78,10 +78,10 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
 
                     //Create a channel that will show the IHS values
-                    var theChannel = ChannelYVals.Channel('IHS', { minVal: -5, maxVal: +5 });
-                    theChannel.minDrawZoomFactX = 0.005;
+                    var theChannel = ChannelYVals.Channel('IHS', { minVal: 0, maxVal: +7 });
+                    theChannel.minDrawZoomFactX = 0.0015;
                     theChannel.setTitle("IHS");
-                    theChannel.setHeight(250);
+                    theChannel.setHeight(200);
                     this.panelBrowser.addChannel(theChannel, false);
 
                     //Attach a custom tooltip creation function to the channel
@@ -95,7 +95,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     //List of all components that will go into this channel
                     var comps = [
-                    { id: 'pvalue', color: DQX.Color(0.2, 0.8, 0.2) }
+                    { id: 'minus_log10_fixed_effect_pvalue', color: DQX.Color(0.0, 0.0, 0.8) }
                     ];
 
                     var controlsList = [];
@@ -139,7 +139,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     var SummChannel = ChannelYVals.Channel(ID, { minVal: 0, maxVal: 7 });
                     SummChannel.setTitle('Significance');
-                    SummChannel.setHeight(300, true);
+                    SummChannel.setHeight(200, true);
                     that.panelBrowser.addChannel(SummChannel);
 
                     var components = [];

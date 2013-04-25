@@ -6,7 +6,7 @@ define([DQXSC("Utils")],
 
         MetaData.database = "/mnt/storage/malariagen/human/website/data/analysis.sqlite";
 
-        MetaData.tableSNPInfo = "PlotView"; //name of the table containing the snp data
+        MetaData.tableSNPInfo = "ManhattanData"; //name of the table containing the snp data
 
         //////// Information about the chromosomes
         //!!!TODO: this shouldn't be hard-wired, but fetched from the server!!!!
