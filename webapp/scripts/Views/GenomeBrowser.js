@@ -25,8 +25,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     var browserConfig = {
                         serverURL: serverUrl,
-                        chromnrfield: 'chrom',
-//                        chromoIdField: 'chromid',//set this to use chromosome id's
+//                        chromnrfield: 'chrom',
+                        chromoIdField: 'chrom',//set this to use chromosome id's
                         annotTableName: 'annotation_tbl',
                         viewID: 'GenomeBrowser',
                         database: MetaData.database,
@@ -44,7 +44,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     this.panelBrowser.getNavigator().setMinScrollSize(0.0001);
 
                     //Annotation table has 'chrX' chromosome identifiers rather than numbers, so we translate them
-                    //this.panelBrowser.getAnnotationFetcher().translateChromoId = function (id) { return 'chr' + id; }
+                    this.panelBrowser.getAnnotationFetcher().translateChromoId = function (id) { return 'chr' + parseInt(id); }
 
                     //Define the chromosomes
                     $.each(MetaData.chromosomes, function (idx, chromo) {
@@ -59,7 +59,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     var firstChromosome = MetaData.chromosomes[0].id;
                     this.panelBrowser.setChromosome(firstChromosome, true, false);
                     this.panelBrowser.setPostInitialiseHandler(function () {
-                        that.panelBrowser.showRegion(that.panelBrowser.getChromoID(1), 20000000, 1000000);
+                        that.panelBrowser.showRegion(that.panelBrowser.getChromoID(1), 20000000, 100000);
                     });
 
                 };
@@ -79,7 +79,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     //Create a channel that will show the IHS values
                     var theChannel = ChannelYVals.Channel('IHS', { minVal: -5, maxVal: +5 });
-                    theChannel.minDrawZoomFactX = 0.00005;
+                    theChannel.minDrawZoomFactX = 0.005;
                     theChannel.setTitle("IHS");
                     theChannel.setHeight(250);
                     this.panelBrowser.addChannel(theChannel, false);
@@ -95,14 +95,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     //List of all components that will go into this channel
                     var comps = [
-                    { id: 'IHS_Akan', color: DQX.Color(0.2, 0.8, 0.2) },
-                    { id: 'IHS_Fula', color: DQX.Color(0.5, 0.5, 0) },
-                    { id: 'IHS_Jola', color: DQX.Color(0.2, 0.2, 0.9) },
-                    { id: 'IHS_Malawi', color: DQX.Color(0.7, 0.2, 0.7) },
-                    { id: 'IHS_Mandinka', color: DQX.Color(0, 0.6, 0.6) },
-                    { id: 'IHS_Northerner', color: DQX.Color(0.7, 0.4, 0.2) },
-                    { id: 'IHS_Wolof', color: DQX.Color(0, 0.6, 0) },
-                    { id: 'IHS_YRI', color: DQX.Color(0, 0, 0) }
+                    { id: 'pvalue', color: DQX.Color(0.2, 0.8, 0.2) }
                     ];
 
                     var controlsList = [];
@@ -137,7 +130,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                 that.createProfileChannels = function () {
                     this.dataFetcherProfiles = new DataFetcherSummary.Fetcher(serverUrl, 1000, 1200);
 
-                    //this.dataFetcherProfiles.translateChromoId = function (inp) { return 'chr' + inp; } //This translates from numerical chromosome ID's to chrXXX ID's. NOTE !!! : need better method in case of X,Y chromosomes
+                    this.dataFetcherProfiles.translateChromoId = function (inp) { return 'chr' + parseInt(inp); }
                     this.panelBrowser.addDataFetcher(this.dataFetcherProfiles);
 
                     var folder = 'FilterBank/Signif'
