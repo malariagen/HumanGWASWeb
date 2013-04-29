@@ -13,7 +13,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                 //List of components that can be drawn on the genome browser
                 that.plotComponents = [];
                 that.plotComponents.push({ id: 'variable1', filterbankFolder: 'Signif', filterbankID: 'pval', color: DQX.Color(0.0, 0.0, 0.8) });
-                that.plotComponents.push({ id: 'variable2', color: DQX.Color(0.0, 0.0, 0.8) });
+                that.plotComponents.push({ id: 'variable2', filterbankFolder: 'variable2', filterbankID: 'value', color: DQX.Color(0.0, 0.0, 0.8) });
                 that.plotComponents.push({ id: 'variable3', color: DQX.Color(0.0, 0.0, 0.8) });
                 that.plotComponents.push({ id: 'variable4', color: DQX.Color(0.0, 0.0, 0.8) });
                 that.plotComponents.push({ id: 'variable5', color: DQX.Color(0.0, 0.0, 0.8) });
