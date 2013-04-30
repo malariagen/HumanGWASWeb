@@ -18,7 +18,8 @@
                 var Item = {
                     id: this._dataPlotValues.column_name[i],
                     name: this._dataPlotValues.name[i].replace(/\//g, "; "),
-                    defaultVisible: parseInt(this._dataPlotValues.display_in_browser_by_default[i])>0
+                    defaultVisible: parseInt(this._dataPlotValues.display_in_browser_by_default[i])>0,
+                    valueClass: this._dataPlotValues.display_scale[i]
                 };
                 this.genomePlotValues.push(Item);
             }
@@ -41,7 +42,7 @@
 
             MetaDataDynamic.fetchedTables['_dataPlotValues'] = {
                 tableName: MetaData.tablePlotValuesInfo,
-                columns: [{ name: "column_name" }, { name: "variable_id", encoding: "IN" }, { name: "name" }, { name: "visible_in_browser" }, { name: "display_in_browser_by_default"}],
+                columns: [{ name: "column_name" }, { name: "variable_id", encoding: "IN" }, { name: "name" }, { name: "visible_in_browser" }, { name: "display_in_browser_by_default" }, { name: "display_scale"}],
                 sortColumn: "-"
             };
 

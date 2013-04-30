@@ -132,12 +132,19 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     $.each(that.plotValues, function (idx, plotValue) {
 
-                        //Create a channel that will show the IHS values
-                        var theChannel = ChannelYVals.Channel(plotValue.id, { minVal: 0, maxVal: +7 });
-                        //theChannel.minDrawZoomFactX = 0.0015;
+                        //Create a channel
+                        var isPVal = plotValue.valueClass == '-log10';
+                        var isBayesFactor = plotValue.valueClass == 'log10';
+                        var scaleMin = 0;
+                        var scaleMax = 1;
+                        if (isPVal) { scaleMin = 0; scaleMax = 7; }
+                        if (isBayesFactor) { scaleMin = -1; scaleMax = 7; }
+                        var theChannel = ChannelYVals.Channel(plotValue.id, { minVal: scaleMin, maxVal: scaleMax });
                         theChannel.setTitle(plotValue.id);
                         theChannel.setHeight(200, true);
                         that.panelBrowser.addChannel(theChannel, false);
+
+                        theChannel.setChangeYScale(false, true);
 
                         theChannel.postDraw = function (drawInfo) {
                             if (!that.showSNPPoints) {
