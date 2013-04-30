@@ -12,13 +12,13 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                 //List of components that can be drawn on the genome browser
                 that.plotComponents = [];
-                that.plotComponents.push({ id: 'variable1', color:DQX.Color(0,0,0), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable2', color:DQX.Color(0,0,0), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable3', color:DQX.Color(0,0,0), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable4', color:DQX.Color(0,0,0), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable5', color:DQX.Color(0,0,0), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable6', color:DQX.Color(0,0,0), hasFilterBank: false });
-                that.plotComponents.push({ id: 'variable7', color:DQX.Color(0,0,0), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable1', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable2', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable3', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable4', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable5', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable6', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable7', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
 
                 //List of filterbanked summary elements to draw
                 var summaryComps = [];
@@ -87,7 +87,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                 that.updateChannelVisibility = function () { //updates the visibility status of the elements of the viewer
                     var zoomfact = this.panelBrowser.getZoomFactorX();
-                    var showSNPPoints = (zoomfact >= 0.0015);
+                    var showSNPPoints = (zoomfact >= 0.001);
                     if (showSNPPoints != this.showSNPPoints) {
                         this.showSNPPoints = showSNPPoints;
                         $.each(that.plotComponents, function (idx, comp) {
@@ -98,7 +98,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                                 $.each(summaryComps, function (idx, summaryComp) {
                                     var summCompID = summaryID + '_' + summaryComp.id;
                                     var summComp = theChannel.findComponent(summCompID);
-                                    summComp.setColor(summaryComp.color, summaryComp.opacity * (showSNPPoints?0.2:1));
+                                    summComp.setColor(summaryComp.color, summaryComp.opacity * (showSNPPoints ? 0.2 : 1));
                                 });
                             }
                         });
@@ -112,6 +112,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     //Create data fetcher that will fetch the SNP data
                     this.dataFetcherSNPs = new DataFetchers.Curve(serverUrl, MetaData.database, MetaData.tableSNPInfo, 'pos');
+                    this.dataFetcherSNPs.rangeExtension = 0.5;//fetch smaller range extension for speed reasons
                     this.panelBrowser.addDataFetcher(this.dataFetcherSNPs);
 
                     //Create data fetcher that will fetch the filterbanked data
