@@ -168,6 +168,7 @@
     <Content Include="webapp\scripts\Local\_SetServerUrl.js" />
     <Content Include="webapp\scripts\main.js" />
     <Content Include="webapp\scripts\MetaData.js" />
+    <Content Include="webapp\scripts\MetaDataDynamic.js" />
     <Content Include="webapp\scripts\Page.js" />
     <Content Include="webapp\scripts\require.js" />
     <Content Include="webapp\scripts\ShowSNPPopup.js" />

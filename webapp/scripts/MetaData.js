@@ -6,9 +6,11 @@ define([DQXSC("Utils")],
 
         MetaData.database = "/mnt/storage/malariagen/human/website/data/analysis.sqlite";
 
-        MetaData.tableSNPInfo = "ManhattanData"; //name of the table containing the snp data uses to show in the plot
+        MetaData.tablePlotValuesInfo = "GenomeBrowserPlotValues"; //Table containing info about the plot value columns as provided in the table "MetaData.tableSNPInfo"
 
-        MetaData.tableSNPDetails = "SNPDetails"; //name of the table containing the snp details data
+        MetaData.tableSNPInfo = "ManhattanData"; //Table containing the snp data uses to show in the plot
+
+        MetaData.tableSNPDetails = "SNPDetails"; //Table containing the snp details data
 
         //////// Information about the chromosomes
         //!!!TODO: this shouldn't be hard-wired, but fetched from the server!!!!

@@ -1,6 +1,6 @@
 ﻿
-define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("SQL"), DQXSC("DocEl"), DQXSC("Utils"), DQXSC("FrameList"), DQXSC("ChannelPlot/GenomePlotter"), DQXSC("ChannelPlot/ChannelSequence"), DQXSC("ChannelPlot/ChannelSnps"), DQXSC("ChannelPlot/ChannelYVals"), DQXSC("DataFetcher/DataFetcherFile"), DQXSC("DataFetcher/DataFetchers"), DQXSC("DataFetcher/DataFetcherSummary"), "MetaData"],
-    function (require, Framework, Controls, Msg, SQL, DocEl, DQX, FrameList, GenomePlotter, ChannelSequence, ChannelSnps, ChannelYVals, DataFetcherFile, DataFetchers, DataFetcherSummary, MetaData) {
+define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("SQL"), DQXSC("DocEl"), DQXSC("Utils"), DQXSC("FrameList"), DQXSC("ChannelPlot/GenomePlotter"), DQXSC("ChannelPlot/ChannelSequence"), DQXSC("ChannelPlot/ChannelSnps"), DQXSC("ChannelPlot/ChannelYVals"), DQXSC("DataFetcher/DataFetcherFile"), DQXSC("DataFetcher/DataFetchers"), DQXSC("DataFetcher/DataFetcherSummary"), "MetaData", "MetaDataDynamic"],
+    function (require, Framework, Controls, Msg, SQL, DocEl, DQX, FrameList, GenomePlotter, ChannelSequence, ChannelSnps, ChannelYVals, DataFetcherFile, DataFetchers, DataFetcherSummary, MetaData, MetaDataDynamic) {
 
         var GenomeBrowserModule = {
 
@@ -11,26 +11,23 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                 that.registerView();
 
                 //List of components that can be drawn on the genome browser
-                that.plotValues = [];
-                that.plotValues.push({ id: 'variable1', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: true });
-                that.plotValues.push({ id: 'variable2', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: true });
-                that.plotValues.push({ id: 'variable3', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
-                that.plotValues.push({ id: 'variable4', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
-                that.plotValues.push({ id: 'variable5', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
-                that.plotValues.push({ id: 'variable6', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
-                that.plotValues.push({ id: 'variable7', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
+                that.plotValues = MetaDataDynamic.genomePlotValues;
+                $.each(that.plotValues, function (idx, plotValue) {
+                    plotValue.hasFilterBank = true;
+                    plotValue.color = DQX.Color(0, 0, 0.75);
+                });
 
                 //List of filterbanked summary elements to draw
                 var summaryComps = [];
                 summaryComps.push({ id: 'Max', color: DQX.Color(0.0, 0, 1.0), opacity: 1.0 });
-                summaryComps.push({ id: 'Q99', color: DQX.Color(1.0, 0, 0.0), opacity: 0.35 });
+                //                summaryComps.push({ id: 'Q99', color: DQX.Color(1.0, 0, 0.0), opacity: 0.35 });
                 summaryComps.push({ id: 'Q95', color: DQX.Color(0.5, 0, 0.0), opacity: 0.35 });
                 summaryComps.push({ id: 'Q50', color: DQX.Color(0.0, 0, 0.0), opacity: 0.35 });
 
 
                 that.createFramework = function () {
-                    this.frameLeft = that.getFrame().addMemberFrame(Framework.FrameGroupVert('settings', 0.01))
-                        .setMargins(5).setDisplayTitle('settings group').setFixedSize(Framework.dimX, 380);
+                    this.frameLeft = that.getFrame().addMemberFrame(Framework.FrameGroupVert('settings', 0.3))
+                        .setMargins(0).setMinSize(Framework.dimX, 380);
                     this.frameControls = this.frameLeft.addMemberFrame(Framework.FrameFinal('settings', 0.7))
                         .setMargins(5).setDisplayTitle('Settings').setFixedSize(Framework.dimX, 380);
                     this.frameBrowser = that.getFrame().addMemberFrame(Framework.FrameFinal('browserPanel', 0.7))
@@ -114,7 +111,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     this.dataFetcherSNPs.rangeExtension = 0.5; //fetch smaller range extension for speed reasons
                     this.panelBrowser.addDataFetcher(this.dataFetcherSNPs);
 
-                    require("Page").dataFetcherSNPs = this.dataFetcherSNPs;//Store this fetcher in a location accessible for everybody
+                    require("Page").dataFetcherSNPs = this.dataFetcherSNPs; //Store this fetcher in a location accessible for everybody
 
                     //Create data fetcher that will fetch the filterbanked data
                     this.dataFetcherProfiles = new DataFetcherSummary.Fetcher(serverUrl, 1000, 1200);
@@ -141,6 +138,17 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         theChannel.setTitle(plotValue.id);
                         theChannel.setHeight(200, true);
                         that.panelBrowser.addChannel(theChannel, false);
+
+                        theChannel.postDraw = function (drawInfo) {
+                            if (!that.showSNPPoints) {
+                                drawInfo.centerContext.fillStyle = DQX.Color(0.3, 0.3, 0.3).toString();
+                                drawInfo.centerContext.font = 'italic 15px sans-serif';
+                                drawInfo.centerContext.textBaseline = 'top';
+                                drawInfo.centerContext.textAlign = 'left';
+                                drawInfo.centerContext.fillText('Zoom in to see individual SNP points', 8, 8);
+                            }
+                        }
+
 
                         //Attach a custom tooltip creation function to the channel
                         theChannel.getToolTipContent = function (compID, pointIndex) {
@@ -175,14 +183,14 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                         //create a checkbox controlling the visibility of this component
                         var colorIndicator = Controls.Static('<span style="background-color:{color}">&nbsp;&nbsp;&nbsp;</span>&nbsp;'.DQXformat({ color: plotValue.color.toString() }));
-                        var chk = Controls.Check('', { label: plotValue.id, value: plotValue.defaultVisible });
+                        var chk = Controls.Check('', { label: plotValue.name, value: plotValue.defaultVisible });
                         chk.setOnChanged(function () {
                             that.panelBrowser.channelModifyVisibility(theChannel.getID(), chk.getValue());
                             that.updateChannelVisibility();
                             that.panelBrowser.render();
                         });
                         plotValue.visibilityCheckBox = chk;
-                        controlsList.push(Controls.CompoundHor([colorIndicator, chk]));
+                        controlsList.push(Controls.CompoundHor([/*colorIndicator,*/chk]));
 
                         theChannel.handlePointClicked = function (compID, pointIndex) {
                             var snpid = that.dataFetcherSNPs.getColumnPoint(pointIndex, 'snpid');

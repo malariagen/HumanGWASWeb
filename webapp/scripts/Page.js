@@ -1,5 +1,5 @@
-﻿define([DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("DocEl"), DQXSC("Msg"), "Views/Intro", "Views/GenomeBrowser", "ShowSNPPopup"],
-    function (Framework, HistoryManager, DocEl, Msg, IntroModule, GenomeBrowserModule, ShowSNPPopup) {
+﻿define([DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("DocEl"), DQXSC("Msg"), "Views/Intro", "Views/GenomeBrowser", "MetaDataDynamic", "ShowSNPPopup"],
+    function (Framework, HistoryManager, DocEl, Msg, IntroModule, GenomeBrowserModule, MetaDataDynamic, ShowSNPPopup) {
         thePage = {
 
             createFramework: function () {
@@ -21,7 +21,7 @@
                 .setFrameClass('DQXClient').setDisplayTitle('Introduction'); ;
 
                 thePage.frameGenomeBrowser = thePage.frameBody.addMemberFrame(Framework.FrameGroupHor('genomebrowser', 1))
-                .setMargins(10).setDisplayTitle('Genome browser'); ;
+                .setMarginsIndividual(0,6,0,0).setDisplayTitle('Genome browser'); ;
 
 
                 //Create the views
@@ -36,8 +36,11 @@
                 Msg.listen('', { type: 'Home' }, function (context) { if (!thePage.frameIntro.isVisible()) HistoryManager.setState({ start: null }); });
                 //Msg.listen('', { type: 'ShowBrowser' }, function (context, studyid) { thePage.frameBrowser.makeVisible(); });
 
-            }
+            },
 
+            fetchRequiredInfo: function (onCompletedHandler) {
+                thePage.metaDataDynamic = MetaDataDynamic.fetch(onCompletedHandler);
+            },
 
         };
 
