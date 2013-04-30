@@ -114,6 +114,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     this.dataFetcherSNPs.rangeExtension = 0.5; //fetch smaller range extension for speed reasons
                     this.panelBrowser.addDataFetcher(this.dataFetcherSNPs);
 
+                    require("Page").dataFetcherSNPs = this.dataFetcherSNPs;//Store this fetcher in a location accessible for everybody
+
                     //Create data fetcher that will fetch the filterbanked data
                     this.dataFetcherProfiles = new DataFetcherSummary.Fetcher(serverUrl, 1000, 1200);
                     this.dataFetcherProfiles.translateChromoId = function (inp) { return 'chr' + parseInt(inp); }
@@ -137,7 +139,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         var theChannel = ChannelYVals.Channel(plotValue.id, { minVal: 0, maxVal: +7 });
                         //theChannel.minDrawZoomFactX = 0.0015;
                         theChannel.setTitle(plotValue.id);
-                        theChannel.setHeight(200,true);
+                        theChannel.setHeight(200, true);
                         that.panelBrowser.addChannel(theChannel, false);
 
                         //Attach a custom tooltip creation function to the channel
@@ -169,7 +171,6 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         plotcomp.myPlotHints.color = plotValue.color;
                         plotcomp.myPlotHints.pointStyle = 1;
                         theChannel.modifyComponentActiveStatus(plotValue.id, false);
-
                         that.panelBrowser.channelModifyVisibility(theChannel.getID(), plotValue.defaultVisible);
 
                         //create a checkbox controlling the visibility of this component
@@ -182,6 +183,12 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         });
                         plotValue.visibilityCheckBox = chk;
                         controlsList.push(Controls.CompoundHor([colorIndicator, chk]));
+
+                        theChannel.handlePointClicked = function (compID, pointIndex) {
+                            var snpid = that.dataFetcherSNPs.getColumnPoint(pointIndex, 'snpid');
+                            Msg.send({ type: 'ShowSNPPopup' }, snpid);
+                        }
+
 
                     });
 

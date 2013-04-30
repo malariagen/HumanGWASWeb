@@ -170,6 +170,7 @@
     <Content Include="webapp\scripts\MetaData.js" />
     <Content Include="webapp\scripts\Page.js" />
     <Content Include="webapp\scripts\require.js" />
+    <Content Include="webapp\scripts\ShowSNPPopup.js" />
     <Content Include="webapp\scripts\Views\GenomeBrowser.js" />
     <Content Include="webapp\scripts\Views\Intro.js" />
   </ItemGroup>
