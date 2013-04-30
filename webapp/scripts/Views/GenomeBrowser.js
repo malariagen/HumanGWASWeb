@@ -48,7 +48,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         annotTableName: 'annotation_tbl',
                         viewID: 'GenomeBrowser',
                         database: MetaData.database,
-                        annotationChannelHeight: 100
+                        annotationChannelHeight: 100,
+                        canZoomVert: true
                     };
 
                     //Intialise the form with the controls
@@ -136,7 +137,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         var theChannel = ChannelYVals.Channel(plotValue.id, { minVal: 0, maxVal: +7 });
                         //theChannel.minDrawZoomFactX = 0.0015;
                         theChannel.setTitle(plotValue.id);
-                        theChannel.setHeight(200);
+                        theChannel.setHeight(200,true);
                         that.panelBrowser.addChannel(theChannel, false);
 
                         //Attach a custom tooltip creation function to the channel
