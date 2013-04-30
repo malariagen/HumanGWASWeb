@@ -11,14 +11,14 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                 that.registerView();
 
                 //List of components that can be drawn on the genome browser
-                that.plotComponents = [];
-                that.plotComponents.push({ id: 'variable1', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable2', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable3', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable4', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable5', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable6', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
-                that.plotComponents.push({ id: 'variable7', color: DQX.Color(0, 0, 0.75), hasFilterBank: true });
+                that.plotValues = [];
+                that.plotValues.push({ id: 'variable1', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: true });
+                that.plotValues.push({ id: 'variable2', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: true });
+                that.plotValues.push({ id: 'variable3', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
+                that.plotValues.push({ id: 'variable4', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
+                that.plotValues.push({ id: 'variable5', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
+                that.plotValues.push({ id: 'variable6', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
+                that.plotValues.push({ id: 'variable7', color: DQX.Color(0, 0, 0.75), hasFilterBank: true, defaultVisible: false });
 
                 //List of filterbanked summary elements to draw
                 var summaryComps = [];
@@ -73,8 +73,6 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     this.createSNPChannels();
 
-                    //                    this.createProfileChannels();
-
                     //Causes the browser to start with a sensible start region
                     var firstChromosome = MetaData.chromosomes[0].id;
                     this.panelBrowser.setChromosome(firstChromosome, true, false);
@@ -88,21 +86,21 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                 that.updateChannelVisibility = function () { //updates the visibility status of the elements of the viewer
                     var zoomfact = this.panelBrowser.getZoomFactorX();
                     var showSNPPoints = (zoomfact >= 0.001);
-                    if (showSNPPoints != this.showSNPPoints) {
+                    if (true/*showSNPPoints != this.showSNPPoints*/) {
                         this.showSNPPoints = showSNPPoints;
-                        $.each(that.plotComponents, function (idx, comp) {
-                            var theChannel = that.panelBrowser.findChannel(comp.id);
-                            theChannel.modifyComponentActiveStatus(comp.id, showSNPPoints);
-                            if (comp.hasFilterBank) {
-                                var summaryID = 'value';
+                        $.each(that.plotValues, function (idx, plotValue) {
+                            var theChannel = that.panelBrowser.findChannel(plotValue.id);
+                            var isVisible = plotValue.visibilityCheckBox.getValue();
+                            theChannel.modifyComponentActiveStatus(plotValue.id, isVisible && showSNPPoints);
+                            if (plotValue.hasFilterBank) {
                                 $.each(summaryComps, function (idx, summaryComp) {
-                                    var summCompID = summaryID + '_' + summaryComp.id;
+                                    var summCompID = 'value_' + summaryComp.id;
                                     var summComp = theChannel.findComponent(summCompID);
+                                    theChannel.modifyComponentActiveStatus(summComp.getID(), isVisible);
                                     summComp.setColor(summaryComp.color, summaryComp.opacity * (showSNPPoints ? 0.2 : 1));
                                 });
                             }
                         });
-                        //that.panelBrowser.render();
                     }
                 }
 
@@ -112,7 +110,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     //Create data fetcher that will fetch the SNP data
                     this.dataFetcherSNPs = new DataFetchers.Curve(serverUrl, MetaData.database, MetaData.tableSNPInfo, 'pos');
-                    this.dataFetcherSNPs.rangeExtension = 0.5;//fetch smaller range extension for speed reasons
+                    this.dataFetcherSNPs.rangeExtension = 0.5; //fetch smaller range extension for speed reasons
                     this.panelBrowser.addDataFetcher(this.dataFetcherSNPs);
 
                     //Create data fetcher that will fetch the filterbanked data
@@ -132,12 +130,12 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     //List of all components that will go into this channel
                     var controlsList = [];
 
-                    $.each(that.plotComponents, function (idx, comp) {
+                    $.each(that.plotValues, function (idx, plotValue) {
 
                         //Create a channel that will show the IHS values
-                        var theChannel = ChannelYVals.Channel(comp.id, { minVal: 0, maxVal: +7 });
+                        var theChannel = ChannelYVals.Channel(plotValue.id, { minVal: 0, maxVal: +7 });
                         //theChannel.minDrawZoomFactX = 0.0015;
-                        theChannel.setTitle(comp.id);
+                        theChannel.setTitle(plotValue.id);
                         theChannel.setHeight(200);
                         that.panelBrowser.addChannel(theChannel, false);
 
@@ -150,37 +148,38 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                                 return 'No value';
                         }
 
-                        if (comp.hasFilterBank) {
+                        if (plotValue.hasFilterBank) {
                             //Filterbank summaries
-                            var summaryID = 'value';
                             $.each(summaryComps, function (idx, summaryComp) {
-                                var summCompID = summaryID + '_' + summaryComp.id;
-                                var colinfo = that.dataFetcherProfiles.addFetchColumn(summaryFolder + '/' + comp.id, 'Summ01', summCompID);
+                                var summCompID = 'value_' + summaryComp.id;
+                                var colinfo = that.dataFetcherProfiles.addFetchColumn(summaryFolder + '/' + plotValue.id, 'Summ01', summCompID);
                                 var summComp = theChannel.addComponent(ChannelYVals.CompFilled(summCompID, that.dataFetcherProfiles, colinfo.myID));
                                 summComp.setColor(summaryComp.color, summaryComp.opacity);
                                 summComp.myPlotHints.makeDrawLines(3000000.0); //This causes the points to be connected with lines
                                 summComp.myPlotHints.interruptLineAtAbsent = true;
                                 summComp.myPlotHints.drawPoints = false;
-                                theChannel.modifyComponentActiveStatus(summCompID, true, false);
+                                theChannel.modifyComponentActiveStatus(summCompID, false, false);
                             });
                         }
 
                         //Individual SNP values
-                        var colinfo = that.dataFetcherSNPs.addFetchColumn(comp.id, "Float2");
-                        plotcomp = theChannel.addComponent(ChannelYVals.Comp(comp.id, that.dataFetcherSNPs, comp.id));
-                        plotcomp.myPlotHints.color = comp.color;
+                        var colinfo = that.dataFetcherSNPs.addFetchColumn(plotValue.id, "Float2");
+                        plotcomp = theChannel.addComponent(ChannelYVals.Comp(plotValue.id, that.dataFetcherSNPs, plotValue.id));
+                        plotcomp.myPlotHints.color = plotValue.color;
                         plotcomp.myPlotHints.pointStyle = 1;
-                        theChannel.modifyComponentActiveStatus(comp.id, false);
+                        theChannel.modifyComponentActiveStatus(plotValue.id, false);
 
-                        that.panelBrowser.channelModifyVisibility(theChannel.getID(), true);
+                        that.panelBrowser.channelModifyVisibility(theChannel.getID(), plotValue.defaultVisible);
 
                         //create a checkbox controlling the visibility of this component
-                        var colorIndicator = Controls.Static('<span style="background-color:{color}">&nbsp;&nbsp;&nbsp;</span>&nbsp;'.DQXformat({ color: comp.color.toString() }));
-                        var chk = Controls.Check('', { label: comp.id, value: true });
+                        var colorIndicator = Controls.Static('<span style="background-color:{color}">&nbsp;&nbsp;&nbsp;</span>&nbsp;'.DQXformat({ color: plotValue.color.toString() }));
+                        var chk = Controls.Check('', { label: plotValue.id, value: plotValue.defaultVisible });
                         chk.setOnChanged(function () {
-                            theChannel.modifyComponentActiveStatus(comp.id, chk.getValue());
+                            that.panelBrowser.channelModifyVisibility(theChannel.getID(), chk.getValue());
+                            that.updateChannelVisibility();
                             that.panelBrowser.render();
                         });
+                        plotValue.visibilityCheckBox = chk;
                         controlsList.push(Controls.CompoundHor([colorIndicator, chk]));
 
                     });
