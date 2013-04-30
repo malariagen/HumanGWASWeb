@@ -12,13 +12,13 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                 //List of components that can be drawn on the genome browser
                 that.plotComponents = [];
-                that.plotComponents.push({ id: 'variable1', filterbankFolder: 'Signif', filterbankID: 'pval', color: DQX.Color(0.0, 0.0, 0.8) });
-                that.plotComponents.push({ id: 'variable2', filterbankFolder: 'variable2', filterbankID: 'value', color: DQX.Color(0.0, 0.0, 0.8) });
-                that.plotComponents.push({ id: 'variable3', color: DQX.Color(0.0, 0.0, 0.8) });
-                that.plotComponents.push({ id: 'variable4', color: DQX.Color(0.0, 0.0, 0.8) });
-                that.plotComponents.push({ id: 'variable5', color: DQX.Color(0.0, 0.0, 0.8) });
-                that.plotComponents.push({ id: 'variable6', color: DQX.Color(0.0, 0.0, 0.8) });
-                that.plotComponents.push({ id: 'variable7', color: DQX.Color(0.0, 0.0, 0.8) });
+                that.plotComponents.push({ id: 'variable1', color:DQX.Color(0,0,0), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable2', color:DQX.Color(0,0,0), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable3', color:DQX.Color(0,0,0), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable4', color:DQX.Color(0,0,0), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable5', color:DQX.Color(0,0,0), hasFilterBank: true });
+                that.plotComponents.push({ id: 'variable6', color:DQX.Color(0,0,0), hasFilterBank: false });
+                that.plotComponents.push({ id: 'variable7', color:DQX.Color(0,0,0), hasFilterBank: true });
 
                 //List of filterbanked summary elements to draw
                 var summaryComps = [];
@@ -93,8 +93,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         $.each(that.plotComponents, function (idx, comp) {
                             var theChannel = that.panelBrowser.findChannel(comp.id);
                             theChannel.modifyComponentActiveStatus(comp.id, showSNPPoints);
-                            if ('filterbankFolder' in comp) {
-                                var summaryID = comp.filterbankID;
+                            if (comp.hasFilterBank) {
+                                var summaryID = 'value';
                                 $.each(summaryComps, function (idx, summaryComp) {
                                     var summCompID = summaryID + '_' + summaryComp.id;
                                     var summComp = theChannel.findComponent(summCompID);
@@ -149,12 +149,12 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                                 return 'No value';
                         }
 
-                        if ('filterbankFolder' in comp) {
+                        if (comp.hasFilterBank) {
                             //Filterbank summaries
-                            var summaryID = comp.filterbankID;
+                            var summaryID = 'value';
                             $.each(summaryComps, function (idx, summaryComp) {
                                 var summCompID = summaryID + '_' + summaryComp.id;
-                                var colinfo = that.dataFetcherProfiles.addFetchColumn(summaryFolder + '/' + comp.filterbankFolder, 'Summ01', summCompID);
+                                var colinfo = that.dataFetcherProfiles.addFetchColumn(summaryFolder + '/' + comp.id, 'Summ01', summCompID);
                                 var summComp = theChannel.addComponent(ChannelYVals.CompFilled(summCompID, that.dataFetcherProfiles, colinfo.myID));
                                 summComp.setColor(summaryComp.color, summaryComp.opacity);
                                 summComp.myPlotHints.makeDrawLines(3000000.0); //This causes the points to be connected with lines
@@ -190,38 +190,6 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                 }
 
-
-                that.createProfileChannels = function () {
-                    this.dataFetcherProfiles = new DataFetcherSummary.Fetcher(serverUrl, 1000, 1200);
-
-                    this.dataFetcherProfiles.translateChromoId = function (inp) { return 'chr' + parseInt(inp); }
-                    this.panelBrowser.addDataFetcher(this.dataFetcherProfiles);
-
-                    var folder = 'FilterBank/Signif'
-
-                    var ID = 'pval';
-
-                    var SummChannel = ChannelYVals.Channel(ID, { minVal: 0, maxVal: 7 });
-                    SummChannel.setTitle('Significance');
-                    SummChannel.setHeight(200, true);
-                    that.panelBrowser.addChannel(SummChannel);
-
-                    var components = [];
-                    components.push({ id: 'Max', color: DQX.Color(1.0, 0, 0) });
-                    components.push({ id: 'Q99', color: DQX.Color(0, 0, 1.0) });
-                    components.push({ id: 'Q95', color: DQX.Color(0, 0, 0.5) });
-                    components.push({ id: 'Q50', color: DQX.Color(0, 0, 0.5) });
-
-                    $.each(components, function (idx, component) {
-                        var colinfo = that.dataFetcherProfiles.addFetchColumn(folder, 'Summ01', ID + '_' + component.id);
-                        var comp = SummChannel.addComponent(ChannelYVals.CompFilled(colinfo.myID, that.dataFetcherProfiles, colinfo.myID));
-                        comp.setColor(component.color);
-                        comp.myPlotHints.makeDrawLines(3000000.0); //This causes the points to be connected with lines
-                        comp.myPlotHints.interruptLineAtAbsent = true;
-                        comp.myPlotHints.drawPoints = false;
-                        SummChannel.modifyComponentActiveStatus(colinfo.myID, true, false);
-                    });
-                }
 
 
 
