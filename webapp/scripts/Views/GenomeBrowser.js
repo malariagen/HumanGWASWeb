@@ -62,7 +62,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     Msg.listen('', { type: 'ZoomFactorXChanged', id: this.panelBrowser.myID }, $.proxy(that.updateChannelVisibility, that));
 
                     //Annotation table has 'chrX' chromosome identifiers rather than numbers, so we translate them
-                    this.panelBrowser.getAnnotationFetcher().translateChromoId = function (id) { return 'chr' + parseInt(id); }
+                    this.panelBrowser.getAnnotationFetcher().translateChromoId = function (id) { return 'chr' + parseInt(id, 10); }
 
                     //Define the chromosomes
                     $.each(MetaData.chromosomes, function (idx, chromo) {
@@ -115,7 +115,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     //Create data fetcher that will fetch the filterbanked data
                     this.dataFetcherProfiles = new DataFetcherSummary.Fetcher(serverUrl, 1000, 1200);
-                    this.dataFetcherProfiles.translateChromoId = function (inp) { return 'chr' + parseInt(inp); }
+                    this.dataFetcherProfiles.translateChromoId = function (inp) { return 'chr' + parseInt(inp, 10); }
                     this.panelBrowser.addDataFetcher(this.dataFetcherProfiles);
                     var summaryFolder = 'FilterBank';
 
@@ -127,9 +127,10 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
 
 
-                    //List of all components that will go into this channel
-                    var controlsList = [];
 
+                    var controlsList = []; //List of all controls that determine visibility of channels
+
+                    //Draw all the plot values
                     $.each(that.plotValues, function (idx, plotValue) {
 
                         //Create a channel
@@ -155,7 +156,6 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                                 drawInfo.centerContext.fillText('Zoom in to see individual SNP points', 8, 8);
                             }
                         }
-
 
                         //Attach a custom tooltip creation function to the channel
                         theChannel.getToolTipContent = function (compID, pointIndex) {
@@ -204,8 +204,54 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                             Msg.send({ type: 'ShowSNPPopup' }, snpid);
                         }
 
-
                     });
+
+
+
+
+                    if (true) {//Create recombination rate channel
+                        var channelID = 'RecombinationRate';
+                        var label = 'Recombination rate';
+                        var defaultVisible = true;
+                        var theChannel = ChannelYVals.Channel(channelID, { minVal: 0, maxVal: 100 });
+                        theChannel.setTitle(label);
+                        theChannel.setHeight(200, true);
+                        that.panelBrowser.addChannel(theChannel, false);
+                        theChannel.setChangeYScale(false, true);
+                        var summCompList = [];
+
+                        var summCompID = 'value_' + 'Max';
+                        var colinfo = that.dataFetcherProfiles.addFetchColumn(summaryFolder + '/' + channelID, 'Summ01', summCompID);
+                        var summComp = theChannel.addComponent(ChannelYVals.CompFilled(summCompID, that.dataFetcherProfiles, colinfo.myID));
+                        summCompList.push(summComp);
+                        summComp.setColor(DQX.Color(0, 0, 0), 0.35);
+                        summComp.myPlotHints.makeDrawLines(3000000.0); //This causes the points to be connected with lines
+                        summComp.myPlotHints.interruptLineAtAbsent = true;
+                        summComp.myPlotHints.drawPoints = false;
+                        theChannel.modifyComponentActiveStatus(summCompID, defaultVisible, false);
+
+                        var summCompID = 'value_' + 'Q50';
+                        var colinfo = that.dataFetcherProfiles.addFetchColumn(summaryFolder + '/' + channelID, 'Summ01', summCompID);
+                        var summComp = theChannel.addComponent(ChannelYVals.CompFilled(summCompID, that.dataFetcherProfiles, colinfo.myID));
+                        summCompList.push(summComp);
+                        summComp.setColor(DQX.Color(0.0, 0, 0), 0.75);
+                        summComp.myPlotHints.makeDrawLines(3000000.0); //This causes the points to be connected with lines
+                        summComp.myPlotHints.interruptLineAtAbsent = true;
+                        summComp.myPlotHints.drawPoints = false;
+                        theChannel.modifyComponentActiveStatus(summCompID, defaultVisible, false);
+
+                        var chk = Controls.Check('', { label: label, value: defaultVisible });
+                        chk.setOnChanged(function () {
+                            that.panelBrowser.channelModifyVisibility(theChannel.getID(), chk.getValue());
+                            $.each(summCompList, function (idx, summComp) {
+                                summComp.modifyComponentActiveStatus(chk.getValue());
+                            });
+                            that.panelBrowser.render();
+                        });
+                        controlsList.push(Controls.CompoundHor([chk]));
+                    }
+
+
 
                     //Add the checkboxes that control the visibility of the components
                     that.panelControls.addControl(Controls.CompoundVert(controlsList));
