@@ -42,7 +42,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         serverURL: serverUrl,
                         //                        chromnrfield: 'chrom',
                         chromoIdField: 'chrom', //set this to use chromosome id's
-                        annotTableName: 'annotation_tbl',
+                        annotTableName: 'refGeneConverted',
                         viewID: 'GenomeBrowser',
                         database: MetaData.database,
                         annotationChannelHeight: 100,
