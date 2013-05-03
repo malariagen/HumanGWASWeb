@@ -12,6 +12,10 @@ define([DQXSC("Utils")],
 
         MetaData.tableSNPDetails = "SNPDetails"; //Table containing the snp details data
 
+        MetaData.countries = ['BurkinaFaso', 'Cameroon', 'Gambia', 'Ghana', 'Kenya', 'Malawi', 'Mali', 'Tanzania'];
+        MetaData.countryProperties = ['AA', 'AB', 'BB', 'cases_AA', 'controls_AA', 'cases_AB', 'controls_AB', 'cases_BB', 'controls_BB', 'cases_NULL', 'controls_NULL', 'info', 'maf', 'NULL', 'pvalue', 'se_1', 'B_allele_frequency', 'beta_1'];
+
+
         //////// Information about the chromosomes
         //!!!TODO: this shouldn't be hard-wired, but fetched from the server!!!!
         chromsizes = [250, 245, 205, 195, 185, 175, 165, 150, 145, 140, 140, 135, 120, 110, 105, 95, 85, 80, 70, 70, 55, 52];

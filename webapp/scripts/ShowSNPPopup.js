@@ -7,7 +7,39 @@
         ShowSNPPopup.createPopup = function (data) {
             var snpid = data['snpid'];
             var content = '<div style="max-height:600px">';
+
+            content += '<table class="DQXStyledTable">';
+
+            content += "<tr>";
+            content += "<th>";
+            content += '.';
+            content += "</th>";
+            $.each(MetaData.countries, function (idx1, country) {
+                content += "<th>";
+                content += country;
+                content += "</th>";
+            });
+            content += "</tr>";
+
+            $.each(MetaData.countryProperties, function (idx2, prop) {
+                content += "<tr>";
+                content += "<td>";
+                content += prop;
+                content += "</td>";
+                $.each(MetaData.countries, function (idx1, country) {
+                    colid = country + ':' + prop;
+                    content += "<td>";
+                    var st = data[colid];
+                    content += parseFloat(st).toFixed(5);
+                    content += "</td>";
+                    delete data[colid];
+                });
+                content += "</tr>";
+            });
+            content += "</table>";
+
             content += DQX.CreateKeyValueTable(data);
+
             content += '</div>';
 
             var popupID = Popup.create("SNP " + snpid, content);
