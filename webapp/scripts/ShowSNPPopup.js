@@ -4,39 +4,42 @@
 
         var ShowSNPPopup = {}
 
+
         ShowSNPPopup.createPopup = function (data) {
             var snpid = data['snpid'];
-            var content = '<div style="max-height:600px">';
+            var content = '<div style="max-height:700px;max-width:900px;overflow-x:auto">';
 
-            content += '<table class="DQXStyledTable">';
+            $.each(MetaData.countryPropertyGroups, function (idx0, propgroup) {
+                content += '<table class="DQXStyledTable">';
 
-            content += "<tr>";
-            content += "<th>";
-            content += '.';
-            content += "</th>";
-            $.each(MetaData.countries, function (idx1, country) {
-                content += "<th>";
-                content += country;
-                content += "</th>";
-            });
-            content += "</tr>";
-
-            $.each(MetaData.countryProperties, function (idx2, prop) {
                 content += "<tr>";
-                content += "<td>";
-                content += prop;
-                content += "</td>";
-                $.each(MetaData.countries, function (idx1, country) {
-                    colid = country + ':' + prop;
-                    content += "<td>";
-                    var st = data[colid];
-                    content += parseFloat(st).toFixed(5);
-                    content += "</td>";
-                    delete data[colid];
+                content += "<th>";
+                content += 'Country';
+                content += "</th>";
+                $.each(propgroup, function (idx1, prop) {
+                    content += "<th>";
+                    content += prop;
+                    content += "</th>";
                 });
                 content += "</tr>";
+
+                $.each(MetaData.countries, function (idx1, country) {
+                    content += "<tr>";
+                    content += "<td>";
+                    content += '<b>' + country + '</b>';
+                    content += "</td>";
+                    $.each(propgroup, function (idx2, prop) {
+                        colid = country + ':' + prop;
+                        content += "<td>";
+                        var st = data[colid];
+                        content += st;
+                        content += "</td>";
+                        delete data[colid];
+                    });
+                    content += "</tr>";
+                });
+                content += "</table><p/>";
             });
-            content += "</table>";
 
             content += DQX.CreateKeyValueTable(data);
 

@@ -13,7 +13,10 @@ define([DQXSC("Utils")],
         MetaData.tableSNPDetails = "SNPDetails"; //Table containing the snp details data
 
         MetaData.countries = ['BurkinaFaso', 'Cameroon', 'Gambia', 'Ghana', 'Kenya', 'Malawi', 'Mali', 'Tanzania'];
-        MetaData.countryProperties = ['AA', 'AB', 'BB', 'cases_AA', 'controls_AA', 'cases_AB', 'controls_AB', 'cases_BB', 'controls_BB', 'cases_NULL', 'controls_NULL', 'info', 'maf', 'NULL', 'pvalue', 'se_1', 'B_allele_frequency', 'beta_1'];
+        MetaData.countryPropertyGroups = [['AA', 'AB', 'BB', 'maf'],
+                                    ['cases_AA', 'controls_AA', 'cases_AB', 'controls_AB', 'cases_BB', 'controls_BB', 'cases_NULL', 'controls_NULL', 'NULL'],
+                                    ['info', 'pvalue', 'se_1', 'B_allele_frequency', 'beta_1']
+                                    ];
 
 
         //////// Information about the chromosomes
