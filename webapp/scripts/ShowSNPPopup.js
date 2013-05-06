@@ -4,13 +4,19 @@
 
         var ShowSNPPopup = {}
 
+        var renderValueBar = function (val, frac, fracColor) {
+            var frac = Math.min(1, frac);
+            return '<div style="background-color:{fracColor};height:100%;width:{prc}%">'.DQXformat({ prc: 100 * frac, fracColor: fracColor }) + val + '<div>';
+
+        }
+
 
         ShowSNPPopup.createPopup = function (data) {
             var snpid = data['snpid'];
             var content = '<div style="max-height:700px;max-width:900px;overflow-x:auto">';
 
             $.each(MetaData.countryPropertyGroups, function (idx0, propgroup) {
-                content += '<table class="DQXStyledTable">';
+                content += '<table class="DQXStyledTable" style="background-color:white;border:1px solid black">';
 
                 content += "<tr>";
                 content += "<th>";
@@ -18,23 +24,37 @@
                 content += "</th>";
                 $.each(propgroup, function (idx1, prop) {
                     content += "<th>";
-                    content += prop;
+                    content += prop.id;
                     content += "</th>";
                 });
                 content += "</tr>";
 
                 $.each(MetaData.countries, function (idx1, country) {
+                    var dataCountry = {};
+                    $.each(data, function (key, val) {
+                        if (key.split(':')[0] == country) {
+                            dataCountry[key.split(':')[1]] = val;
+                        }
+                    });
+
+                    dataCountry.cases_TOT = parseFloat(dataCountry.cases_AA) + parseFloat(dataCountry.controls_AA) + parseFloat(dataCountry.cases_AB) + parseFloat(dataCountry.controls_AB) + parseFloat(dataCountry.cases_BB) + parseFloat(dataCountry.controls_BB) + parseFloat(dataCountry.cases_NULL) + parseFloat(dataCountry.controls_NULL) + parseFloat(dataCountry.NULL);
+
                     content += "<tr>";
                     content += "<td>";
                     content += '<b>' + country + '</b>';
                     content += "</td>";
                     $.each(propgroup, function (idx2, prop) {
-                        colid = country + ':' + prop;
                         content += "<td>";
-                        var st = data[colid];
+                        var st = dataCountry[prop.id];
+                        var frac = 0;
+                        var fracColor = 'rgb(190,220,255)';
+                        if ('fracScale' in prop)
+                            frac = prop.fracScale(dataCountry);
+                        if ('fracColor' in prop)
+                            fracColor = prop.fracColor;
+                        st = renderValueBar(st, frac, fracColor);
                         content += st;
                         content += "</td>";
-                        delete data[colid];
                     });
                     content += "</tr>";
                 });

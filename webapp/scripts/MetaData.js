@@ -2,6 +2,11 @@ define([DQXSC("Utils")],
     function (DQX) {
         var MetaData = {};
 
+        function log10(val) {
+            return Math.log(val) / Math.LN10;
+        }
+
+
         MetaData.database = "dqx_boilerplate_db"; //name of the database used
 
         MetaData.database = "/mnt/storage/malariagen/human/website/data/analysis.sqlite";
@@ -12,10 +17,34 @@ define([DQXSC("Utils")],
 
         MetaData.tableSNPDetails = "SNPDetails"; //Table containing the snp details data
 
+        var signifColor = 'rgb(255,200,120)';
+
         MetaData.countries = ['BurkinaFaso', 'Cameroon', 'Gambia', 'Ghana', 'Kenya', 'Malawi', 'Mali', 'Tanzania'];
-        MetaData.countryPropertyGroups = [['AA', 'AB', 'BB', 'maf'],
-                                    ['cases_AA', 'controls_AA', 'cases_AB', 'controls_AB', 'cases_BB', 'controls_BB', 'cases_NULL', 'controls_NULL', 'NULL'],
-                                    ['info', 'pvalue', 'se_1', 'B_allele_frequency', 'beta_1']
+        MetaData.countryPropertyGroups = [
+            [
+            { id: 'AA', fracScale: function (data) { return data.AA / data.cases_TOT } },
+            { id: 'AB', fracScale: function (data) { return data.AB / data.cases_TOT } },
+            { id: 'BB', fracScale: function (data) { return data.BB / data.cases_TOT } },
+            { id: 'B_allele_frequency', fracScale: function (data) { return data.B_allele_frequency } },
+            { id: 'maf', fracScale: function (data) { return data.maf } }
+            ],
+            [
+            { id: 'cases_AA', fracScale: function (data) { return data.cases_AA / data.cases_TOT } },
+            { id: 'controls_AA', fracScale: function (data) { return data.controls_AA / data.cases_TOT } },
+            { id: 'cases_AB', fracScale: function (data) { return data.cases_AB / data.cases_TOT } },
+            { id: 'controls_AB', fracScale: function (data) { return data.controls_AB / data.cases_TOT } },
+            { id: 'cases_BB', fracScale: function (data) { return data.cases_BB / data.cases_TOT } },
+            { id: 'controls_BB', fracScale: function (data) { return data.controls_BB / data.cases_TOT } },
+            { id: 'cases_NULL', fracScale: function (data) { return data.cases_NULL / data.cases_TOT } },
+            { id: 'controls_NULL', fracScale: function (data) { return data.controls_NULL / data.cases_TOT } },
+            { id: 'NULL' }
+            ],
+            [
+            { id: 'info' },
+            { id: 'pvalue', fracScale: function (data) { return -log10(data.pvalue) / 10.0 }, fracColor: signifColor },
+            { id: 'se_1' },
+            { id: 'beta_1' }
+            ]
                                     ];
 
 
