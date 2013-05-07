@@ -1,0 +1,25 @@
+﻿    
+.FragmentBarBlue
+{
+background: rgb(216,242,255);
+background: -moz-linear-gradient(top, rgb(216,242,255) 0%, rgb(242,250,255) 45%, rgb(175,228,255) 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(216,242,255)), color-stop(45%,rgb(242,250,255)), color-stop(100%,rgb(175,228,255)));
+background: -webkit-linear-gradient(top, rgb(216,242,255) 0%,rgb(242,250,255) 45%,rgb(175,228,255) 100%);
+background: -o-linear-gradient(top, rgb(216,242,255) 0%,rgb(242,250,255) 45%,rgb(175,228,255) 100%);
+background: -ms-linear-gradient(top, rgb(216,242,255) 0%,rgb(242,250,255) 45%,rgb(175,228,255) 100%);
+background: linear-gradient(to bottom, rgb(216,242,255) 0%,rgb(242,250,255) 45%,rgb(175,228,255) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d8f2ff', endColorstr='#afe4ff',GradientType=0 );
+}
+
+
+.FragmentBarRed
+{
+background: rgb(255,216,216);
+background: -moz-linear-gradient(top, rgb(255,216,216) 0%, rgb(255,242,242) 45%, rgb(255,175,175) 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(255,216,216)), color-stop(45%,rgb(255,242,242)), color-stop(100%,rgb(255,175,175)));
+background: -webkit-linear-gradient(top, rgb(255,216,216) 0%,rgb(255,242,242) 45%,rgb(255,175,175) 100%);
+background: -o-linear-gradient(top, rgb(255,216,216) 0%,rgb(255,242,242) 45%,rgb(255,175,175) 100%);
+background: -ms-linear-gradient(top, rgb(255,216,216) 0%,rgb(255,242,242) 45%,rgb(255,175,175) 100%);
+background: linear-gradient(to bottom, rgb(255,216,216) 0%,rgb(255,242,242) 45%,rgb(255,175,175) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd8d8', endColorstr='#ffafaf',GradientType=0 );
+}
