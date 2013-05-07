@@ -11,18 +11,26 @@
 
         var renderValueBar = function (val, frac, fracStyle) {
             var frac = Math.min(1, frac);
-            return '<div class="{fracStyle}" style="height:100%;width:{prc}%;overflow-x:visible">'.DQXformat({ prc: 100 * frac, fracStyle: fracStyle }) + val + '<div>';
+            var rs = '';
+            if (frac > 0.01)
+                rs += '<div class="{fracStyle}" style="height:100%;width:{prc}%;overflow:visible">'.DQXformat({ prc: 100 * frac, fracStyle: fracStyle });
+            rs += val;
+            if (frac > 0.01)
+                rs += '<div>';
+            return rs;
 
         }
 
 
         ShowSNPPopup.createPopup = function (data) {
             var snpid = data['snpid'];
-            var content = '<div style="max-height:700px;max-width:900px;overflow-x:auto">';
+            var content = '<div style="max-height:700px;overflow-x:none">';
 
+            //Create a table per group of per-country properties
             $.each(MetaData.countryPropertyGroups, function (idx0, propgroup) {
-                content += '<table class="DQXStyledTable" style="background-color:white;border:1px solid black">';
+                content += '<table class="DQXStyledTable" style="background-color:white;border:1px solid black;margin-right:25px">';
 
+                //write header
                 content += "<tr>";
                 content += "<th>";
                 content += 'Country';
@@ -34,7 +42,9 @@
                 });
                 content += "</tr>";
 
+                //Create a row per country
                 $.each(MetaData.countries, function (idx1, country) {
+                    //Extract the properties for this specific country
                     var dataCountry = {};
                     $.each(data, function (key, val) {
                         if (key.split(':')[0] == country) {
@@ -42,7 +52,8 @@
                         }
                     });
 
-                    dataCountry.cases_TOT = parseFloat(dataCountry.cases_AA) + parseFloat(dataCountry.controls_AA) + parseFloat(dataCountry.cases_AB) + parseFloat(dataCountry.controls_AB) + parseFloat(dataCountry.cases_BB) + parseFloat(dataCountry.controls_BB) + parseFloat(dataCountry.cases_NULL) + parseFloat(dataCountry.controls_NULL) + parseFloat(dataCountry.NULL);
+                    //Add calculated property: total number of samples
+                    dataCountry.samplesTot = parseFloat(dataCountry.cases_AA) + parseFloat(dataCountry.controls_AA) + parseFloat(dataCountry.cases_AB) + parseFloat(dataCountry.controls_AB) + parseFloat(dataCountry.cases_BB) + parseFloat(dataCountry.controls_BB) + parseFloat(dataCountry.cases_NULL) + parseFloat(dataCountry.controls_NULL) + parseFloat(dataCountry.NULL);
 
                     content += "<tr>";
                     content += "<td>";
@@ -51,7 +62,7 @@
                     $.each(propgroup, function (idx2, prop) {
                         content += "<td>";
                         var st = dataCountry[prop.id];
-                        var frac = 0.0001;
+                        var frac = 0.0;
                         var fracStyle = 'FragmentBarBlue';
                         if ('fracScale' in prop)
                             frac = prop.fracScale(dataCountry);
@@ -74,9 +85,8 @@
                 });
             });
 
-            //Bayesian data values
-            var keys = Object.keys(data);
-            keys.sort();
+            //Table for Bayesian data values
+            var keys = Object.keys(data);keys.sort();//we want to show them sorted by name
             content += '<table class="DQXStyledTable" style="background-color:white;border:1px solid black">';
             content += "<tr>";
             content += "<th>";
@@ -88,7 +98,7 @@
             content += "</tr>";
             content += "</tr>";
 
-            $.each(keys, function (idx,key) {
+            $.each(keys, function (idx, key) {
                 if (key.split('/')[0] == 'ApproximateBayesianMetaAnalysis') {
                     var tokens = key.split('/').slice(1);
                     content += "<tr>";
@@ -105,7 +115,7 @@
             content += "</table><p/>";
 
 
-            //Show remaining data values
+            //Dump remaining data values
             content += DQX.CreateKeyValueTable(data);
 
             content += '</div>';
