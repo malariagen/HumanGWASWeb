@@ -17,7 +17,7 @@ define([DQXSC("Utils")],
 
         MetaData.tableSNPDetails = "SNPDetails"; //Table containing the snp details data
 
-        var signifColor = 'rgb(255,200,120)';
+        var signifStyle = 'FragmentBarRed';
 
         MetaData.countries = ['BurkinaFaso', 'Cameroon', 'Gambia', 'Ghana', 'Kenya', 'Malawi', 'Mali', 'Tanzania'];
         MetaData.countryPropertyGroups = [
@@ -33,15 +33,15 @@ define([DQXSC("Utils")],
             { id: 'controls_AA', fracScale: function (data) { return data.controls_AA / data.cases_TOT } },
             { id: 'cases_AB', fracScale: function (data) { return data.cases_AB / data.cases_TOT } },
             { id: 'controls_AB', fracScale: function (data) { return data.controls_AB / data.cases_TOT } },
-            { id: 'cases_BB', fracScale: function (data) { return data.cases_BB / data.cases_TOT } },
-            { id: 'controls_BB', fracScale: function (data) { return data.controls_BB / data.cases_TOT } },
+            { id: 'cases_BB', fracScale: function (data) { return data.cases_BB / data.cases_TOT } }
+/*            { id: 'controls_BB', fracScale: function (data) { return data.controls_BB / data.cases_TOT } },
             { id: 'cases_NULL', fracScale: function (data) { return data.cases_NULL / data.cases_TOT } },
             { id: 'controls_NULL', fracScale: function (data) { return data.controls_NULL / data.cases_TOT } },
-            { id: 'NULL' }
+            { id: 'NULL' }*/
             ],
             [
             { id: 'info' },
-            { id: 'pvalue', fracScale: function (data) { return -log10(data.pvalue) / 10.0 }, fracColor: signifColor },
+            { id: 'pvalue', fracScale: function (data) { return -log10(data.pvalue) / 10.0 }, fracStyle: signifStyle },
             { id: 'se_1' },
             { id: 'beta_1' }
             ]
