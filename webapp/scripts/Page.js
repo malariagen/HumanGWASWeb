@@ -1,10 +1,11 @@
-﻿define([DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("DocEl"), DQXSC("Msg"), "Views/Intro", "Views/GenomeBrowser", "MetaDataDynamic", "ShowSNPPopup"],
-    function (Framework, HistoryManager, DocEl, Msg, IntroModule, GenomeBrowserModule, MetaDataDynamic, ShowSNPPopup) {
+﻿define([DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("DocEl"), DQXSC("Msg"), "Views/Intro", "Views/GenomeBrowser", "MetaDataDynamic", "ShowSNPPopup", "ShowGenePopup"],
+    function (Framework, HistoryManager, DocEl, Msg, IntroModule, GenomeBrowserModule, MetaDataDynamic, ShowSNPPopup, ShowGenePopup) {
         thePage = {
 
             createFramework: function () {
 
                 ShowSNPPopup.init();
+                ShowGenePopup.init();
 
                 thePage.frameRoot = Framework.FrameGroupVert('');
                 thePage.frameRoot.setMargins(0);
