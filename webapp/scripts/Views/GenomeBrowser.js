@@ -58,6 +58,13 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     this.panelBrowser.getAnnotationChannel().setMinDrawZoomFactX(0.00005);
                     this.panelBrowser.MaxZoomFactX = 1.0 / 0.2;
                     this.panelBrowser.getNavigator().setMinScrollSize(0.0001);
+                    this.panelBrowser.getNavigator().setUnits('Mb');
+                    this.panelBrowser.getNavigator().zoomareafraction = 0.2;
+
+                    this.panelBrowser.annotationChannel.handleFeatureClicked = function (geneID) {
+                        Msg.send({ type: 'ShowGenePopup' }, geneID);
+                    }
+
 
                     Msg.listen('', { type: 'ZoomFactorXChanged', id: this.panelBrowser.myID }, $.proxy(that.updateChannelVisibility, that));
 

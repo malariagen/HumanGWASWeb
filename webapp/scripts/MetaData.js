@@ -18,31 +18,33 @@ define([DQXSC("Utils")],
 
         MetaData.tableSNPDetails = "SNPDetails"; //Table containing the snp details data
 
-        var signifColor = 'rgb(255,200,120)';
+        var signifStyle = 'FragmentBarRed';
 
         MetaData.countries = ['BurkinaFaso', 'Cameroon', 'Gambia', 'Ghana', 'Kenya', 'Malawi', 'Mali', 'Tanzania'];
+
+        //Groups of properties that are available on a per-country basis
         MetaData.countryPropertyGroups = [
             [
-            { id: 'AA', fracScale: function (data) { return data.AA / data.cases_TOT } },
-            { id: 'AB', fracScale: function (data) { return data.AB / data.cases_TOT } },
-            { id: 'BB', fracScale: function (data) { return data.BB / data.cases_TOT } },
+            { id: 'AA', fracScale: function (data) { return data.AA / data.samplesTot } },
+            { id: 'AB', fracScale: function (data) { return data.AB / data.samplesTot } },
+            { id: 'BB', fracScale: function (data) { return data.BB / data.samplesTot } },
             { id: 'B_allele_frequency', fracScale: function (data) { return data.B_allele_frequency } },
             { id: 'maf', fracScale: function (data) { return data.maf } }
             ],
             [
-            { id: 'cases_AA', fracScale: function (data) { return data.cases_AA / data.cases_TOT } },
-            { id: 'controls_AA', fracScale: function (data) { return data.controls_AA / data.cases_TOT } },
-            { id: 'cases_AB', fracScale: function (data) { return data.cases_AB / data.cases_TOT } },
-            { id: 'controls_AB', fracScale: function (data) { return data.controls_AB / data.cases_TOT } },
-            { id: 'cases_BB', fracScale: function (data) { return data.cases_BB / data.cases_TOT } },
-            { id: 'controls_BB', fracScale: function (data) { return data.controls_BB / data.cases_TOT } },
-            { id: 'cases_NULL', fracScale: function (data) { return data.cases_NULL / data.cases_TOT } },
-            { id: 'controls_NULL', fracScale: function (data) { return data.controls_NULL / data.cases_TOT } },
-            { id: 'NULL' }
+            { id: 'cases_AA', fracScale: function (data) { return data.cases_AA / data.samplesTot } },
+            { id: 'controls_AA', fracScale: function (data) { return data.controls_AA / data.samplesTot } },
+            { id: 'cases_AB', fracScale: function (data) { return data.cases_AB / data.samplesTot } },
+            { id: 'controls_AB', fracScale: function (data) { return data.controls_AB / data.samplesTot } },
+            { id: 'cases_BB', fracScale: function (data) { return data.cases_BB / data.samplesTot } },
+            { id: 'controls_BB', fracScale: function (data) { return data.controls_BB / data.samplesTot } },
+/*            { id: 'cases_NULL', fracScale: function (data) { return data.cases_NULL / data.samplesTot } },
+            { id: 'controls_NULL', fracScale: function (data) { return data.controls_NULL / data.samplesTot } },
+            { id: 'NULL' }*/
             ],
             [
             { id: 'info' },
-            { id: 'pvalue', fracScale: function (data) { return -log10(data.pvalue) / 10.0 }, fracColor: signifColor },
+            { id: 'pvalue', fracScale: function (data) { return -log10(data.pvalue) / 10.0 }, fracStyle: signifStyle },
             { id: 'se_1' },
             { id: 'beta_1' }
             ]
