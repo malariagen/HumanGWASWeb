@@ -7,7 +7,8 @@
                 ShowSNPPopup.init();
                 ShowGenePopup.init();
 
-                thePage.frameRoot = Framework.FrameGroupVert('');
+                thePage.frameWindow = Framework.FrameFullWindow(Framework.FrameGroupVert(''));
+                thePage.frameRoot = thePage.frameWindow.getFrameRoot();
                 thePage.frameRoot.setMargins(0);
 
                 //The top line of the page
