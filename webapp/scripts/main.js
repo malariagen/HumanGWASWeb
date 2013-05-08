@@ -16,7 +16,7 @@ require([DQXSCJQ(), DQXSC("Framework"), DQXSC("Msg"), DQXSC("HistoryManager"), D
                     thePage.createFramework();
 
                     //Render frames
-                    Framework.render(thePage.frameRoot, 'Div1');
+                    thePage.frameWindow.render('Div1');
 
                     //Some generic stuff after creation of the html
                     DQX.initPostCreate();
