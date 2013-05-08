@@ -118,6 +118,8 @@
             //Dump remaining data values
             content += DQX.CreateKeyValueTable(data);
 
+            //--> SNP popup content goes here
+
             content += '</div>';
 
             var popupID = Popup.create("SNP " + snpid, content);
