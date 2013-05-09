@@ -31,7 +31,7 @@
             myurl.addUrlQueryItem("datatype", 'recordinfo');
             myurl.addUrlQueryItem("qry", SQL.WhereClause.encode(SQL.WhereClause.CompareFixed('fid', '=', geneid)));
             myurl.addUrlQueryItem("database", MetaData.databases.Annotation.url);
-            myurl.addUrlQueryItem("tbname", MetaData.databases.Annotation.tables.Annotation);
+            myurl.addUrlQueryItem("tbname", MetaData.databases.Annotation.tables.Annotation.tableName );
             $.ajax({
                 url: myurl.toString(),
                 success: function (resp) {
