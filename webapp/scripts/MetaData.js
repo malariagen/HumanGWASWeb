@@ -12,6 +12,10 @@ define([DQXSC("Utils")],
 
 		var signifStyle = 'FragmentBarRed';
 
+		function log10(val) {
+		    return Math.log(val) / Math.LN10;
+		}
+
 		//Groups of properties that are available on a per-country basis.
 		//Setting these here because they have functions which JSON doesn't support.
 		MetaData.countryPropertyGroups = [

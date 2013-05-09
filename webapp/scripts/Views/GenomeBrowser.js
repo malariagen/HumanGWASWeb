@@ -40,7 +40,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     var browserConfig = {
                         serverURL: serverUrl,
-                        chromoIdField: MetaData.databases.Annotation.tables.Annotation.chromosomeColumn, //set this to use chromosome id's
+                        chromoIdField: MetaData.databases.Analysis.tables.SNPDetails.chromosomeColumn, //set this to use chromosome id's
                         annotTableName: MetaData.databases.Annotation.tables.Annotation.tableName,
                         viewID: 'GenomeBrowser',
                         database: MetaData.databases.Annotation.url,
@@ -132,8 +132,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
 
                     //Make sure we fetch the SNP id from the table
-                    this.dataFetcherSNPs.addFetchColumn( MetaData.databases.Analysis.tables.snpIdColumn, "String" );
-                    this.dataFetcherSNPs.activateFetchColumn( MetaData.databases.Analysis.tables.snpIdColumn );
+                    this.dataFetcherSNPs.addFetchColumn( MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn, "String" );
+                    this.dataFetcherSNPs.activateFetchColumn( MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn );
 
 
 
@@ -172,7 +172,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         theChannel.getToolTipContent = function (compID, pointIndex) {
                             var value = this.myComponents[compID].myfetcher.getColumnPoint(pointIndex, compID);
                             if (value != null)
-                                return that.dataFetcherSNPs.getColumnPoint(pointIndex, 'snpid') + '; ' + compID + '= ' + value.toFixed(2);
+                                return that.dataFetcherSNPs.getColumnPoint(pointIndex, MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn) + '; ' + compID + '= ' + value.toFixed(2);
                             else
                                 return 'No value';
                         }
@@ -211,7 +211,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         controlsList.push(Controls.CompoundHor([/*colorIndicator,*/chk]));
 
                         theChannel.handlePointClicked = function (compID, pointIndex) {
-                            var snpid = that.dataFetcherSNPs.getColumnPoint(pointIndex, 'snpid');
+                            var snpid = that.dataFetcherSNPs.getColumnPoint(pointIndex, MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn );
                             Msg.send({ type: 'ShowSNPPopup' }, snpid);
                         }
 

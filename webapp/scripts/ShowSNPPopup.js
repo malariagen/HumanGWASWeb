@@ -23,7 +23,7 @@
 
 
         ShowSNPPopup.createPopup = function (data) {
-            var snpid = data[ MetaData.databases.Analysis.tables.SNPDetails.snpIdColumn ];
+	    var snpid = data[ MetaData.databases.Analysis.tables.SNPDetails.snpIdColumn ];
 
             var tabs = []; //Will contain a list of all tabs, defined as objects with 'title' and 'content'
 
@@ -151,7 +151,7 @@
         ShowSNPPopup.handlePopup = function (snpid) {
             var dataFetcher = ShowSNPPopup.dataFetcherSNPDetails;
             dataFetcher.fetchFullRecordInfo(
-                SQL.WhereClause.CompareFixed( MetaData.databases.Analysis.tables.snpIdColumn, '=', snpid),
+                SQL.WhereClause.CompareFixed( MetaData.databases.Analysis.tables.SNPDetails.snpIdColumn, '=', snpid),
                 function (data) {
                     DQX.stopProcessing();
                     ShowSNPPopup.createPopup(data);
