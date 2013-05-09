@@ -13,7 +13,7 @@
             if( val === undefined || val == "None" ) {
                 rs += 'NA' ;
             } else {
-                console.log( "Format:", format, "val:", val ) ;
+                //console.log( "Format:", format, "val:", val ) ;
                 rs += sprintf( format, val );
             }
             if (frac > 0.01)
@@ -108,7 +108,7 @@
                 //var variables = this.data.map( function( d ) { return d.variable ; } ).sort() ;
                 var variables = this.variables ;
 
-                console.log( "Plotting:", MetaData, variables, this.data ) ;
+                //console.log( "Plotting:", MetaData, variables, this.data ) ;
 
                 var plotheight = 150 ;
                 var plotwidth = 500 ;
