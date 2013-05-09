@@ -40,8 +40,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     var browserConfig = {
                         serverURL: serverUrl,
-                        chromoIdField: MetaData.tables.Annotation.chromosomeColumn, //set this to use chromosome id's
-                        annotTableName: MetaData.tables.Annotation.tableName,
+                        chromoIdField: MetaData.databases.Annotation.tables.Annotation.chromosomeColumn, //set this to use chromosome id's
+                        annotTableName: MetaData.databases.Annotation.tables.Annotation.tableName,
                         viewID: 'GenomeBrowser',
                         database: MetaData.databases.Annotation.url,
                         annotationChannelHeight: 100,

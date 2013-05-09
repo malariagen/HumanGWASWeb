@@ -165,7 +165,7 @@
         }
 
         ShowSNPPopup.init = function () {
-            ShowSNPPopup.dataFetcherSNPDetails = new DataFetchers.Curve(serverUrl, MetaData.database, MetaData.tableSNPDetails, 'pos');
+            ShowSNPPopup.dataFetcherSNPDetails = new DataFetchers.Curve(serverUrl, MetaData.databases.Analysis.url, MetaData.databases.Analysis.tables.SNPDetails, 'pos');
 
             //Create event listener for actions to open a SNP popup window
             Msg.listen('', { type: 'ShowSNPPopup' }, function (context, snpid) {

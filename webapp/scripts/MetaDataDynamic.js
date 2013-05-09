@@ -50,7 +50,7 @@
 
             //Perform all the data fetching
             $.each(MetaDataDynamic.fetchedTables, function (ID, tableInfo) {
-                var fetcher = DataFetcher.RecordsetFetcher(serverUrl, MetaData.database, tableInfo.tableName);
+                var fetcher = DataFetcher.RecordsetFetcher(serverUrl, MetaData.databases.Analysis.url, tableInfo.tableName);
                 $.each(tableInfo.columns, function (colidx, columnInfo) {
                     var encoding = columnInfo.encoding;
                     if (!encoding) encoding = 'ST';
