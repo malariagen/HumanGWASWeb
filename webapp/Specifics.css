@@ -23,3 +23,25 @@ background: -ms-linear-gradient(top, rgb(255,216,216) 0%,rgb(255,242,242) 45%,rg
 background: linear-gradient(to bottom, rgb(255,216,216) 0%,rgb(255,242,242) 45%,rgb(255,175,175) 100%);
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd8d8', endColorstr='#ffafaf',GradientType=0 );
 }
+
+/*
+.DQXFloatBox
+{ 
+    border-width:4px;
+    border-style:solid;
+    border-color:rgb(0,0,0);
+}
+
+.DQXFloatBoxHeader
+{ 
+    background-color:rgb(20,20,20); 
+    background-image:none;
+}
+
+
+.DQXFloatBoxContent
+{ 
+    background: rgb(230,230,230);
+    filter:none;
+}
+*/

@@ -1,5 +1,5 @@
-﻿define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Msg"), DQXSC("SQL"), DQXSC("DocEl"), DQXSC("Popup"), DQXSC("Controls"), DQXSC("DataFetcher/DataFetchers"), "MetaData"],
-    function (require, Framework, Msg, SQL, DocEl, Popup, Controls, DataFetchers, MetaData) {
+﻿define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Msg"), DQXSC("SQL"), DQXSC("DocEl"), DQXSC("Popup"), DQXSC("PopupFrame"), DQXSC("Controls"), DQXSC("DataFetcher/DataFetchers"), "MetaData"],
+    function (require, Framework, Msg, SQL, DocEl, Popup, PopupFrame, Controls, DataFetchers, MetaData) {
 
 
         var ShowSNPPopup = {}
@@ -86,7 +86,7 @@
             });
 
             //Table for Bayesian data values
-            var keys = Object.keys(data);keys.sort();//we want to show them sorted by name
+            var keys = Object.keys(data); keys.sort(); //we want to show them sorted by name
             content += '<table class="DQXStyledTable" style="background-color:white;border:1px solid black">';
             content += "<tr>";
             content += "<th>";
@@ -150,6 +150,29 @@
             Msg.listen('', { type: 'ShowSNPPopup' }, function (context, snpid) {
                 ShowSNPPopup.handlePopup(snpid);
             });
+        }
+
+
+        ShowSNPPopup.create2 = function () {//a test function
+            var popup = PopupFrame.PopupFrame(Framework.FrameGroupHor(''));
+            var frameRoot = popup.getFrameRoot();
+            frameRoot.setFrameClass('DQXLight');
+            frameRoot.setMarginsIndividual(0,7,0,0);
+
+            var settFrame = frameRoot.addMemberFrame(Framework.FrameFinal('', 0.5)).setMargins(5).setDisplayTitle('Settings');
+
+            var tabpanel = frameRoot.addMemberFrame(Framework.FrameGroupTab('', 0.5)).setMarginsIndividual(0, 7, 0, 0).setDisplayTitle('Part 2').setFrameClass('DQXLight').setFrameClassClient('DQXForm');
+
+            tabpanel.addMemberFrame(Framework.FrameFinal('', 0.5)).setMargins(5).setDisplayTitle('Tab 1');
+            tabpanel.addMemberFrame(Framework.FrameFinal('', 0.5)).setMargins(5).setDisplayTitle('Tab 2');
+
+
+            popup.render();
+
+            var settForm = Framework.Form(settFrame);
+            settForm.addControl(Controls.Static('Bla'));
+            settForm.render();
+
         }
 
         return ShowSNPPopup;

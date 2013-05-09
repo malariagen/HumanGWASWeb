@@ -154,6 +154,7 @@
     <Content Include="webapp\scripts\DQX\Markdown.js" />
     <Content Include="webapp\scripts\DQX\Msg.js" />
     <Content Include="webapp\scripts\DQX\Popup.js" />
+    <Content Include="webapp\scripts\DQX\PopupFrame.js" />
     <Content Include="webapp\scripts\DQX\QueryBuilder.js" />
     <Content Include="webapp\scripts\DQX\QueryTable.js" />
     <Content Include="webapp\scripts\DQX\Scroller.js" />
