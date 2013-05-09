@@ -9,19 +9,73 @@
         ShowGenePopup.createPopup = function (geneid, data) {
 
             var content = '';
-            content += DQX.CreateKeyValueTable(data);
-            //--> Gene popup content goes here
+            //content += DQX.CreateKeyValueTable(data);
+            
+            content += "<table>";
+                content += "<tr>";
+                content += "<td><b>Gene</b></td>";
+                content += '<td style="padding-left:5px;max-width:300px;word-wrap:break-word;">' + data['fname'] + "</td>";
+                content += "</tr>";
+                content += "<tr>";
+                content += "<td><b>Chromosome</b></td>";
+                content += '<td style="padding-left:5px;max-width:300px;word-wrap:break-word;">' + data['chromid'] + "</td>";
+                content += "</tr>";
+                content += "<tr>";
+                content += "<td><b>Start&nbsp;position</b></td>";
+                content += '<td style="padding-left:5px;max-width:300px;word-wrap:break-word;">' + data['fstart'] + "</td>";
+                content += "</tr>";
+                content += "<tr>";
+                content += "<td><b>End&nbsp;position</b></td>";
+                content += '<td style="padding-left:5px;max-width:300px;word-wrap:break-word;">' + data['fstop'] + "</td>";
+                content += "</tr>";
+            content += "</table>"
+            
+            var geneName = data['fname'];
 
-            var args = { buttonClass: 'DQXToolButton2', content: 'Show in Ensembl', width: 150, height: 31 }
-            var bt = Controls.Button(null, args);
-            bt.setOnChanged(function () {
-                var url = 'http://www.ensembl.org/Homo_sapiens/Gene/Summary?g={geneid};'.DQXformat({ geneid: geneid });
+            
+            
+            var UniProtButtonArgs = { buttonClass: 'DQXToolButton2', content: 'UniProt', width: 60, height: 20 };
+            var UniProtButton = Controls.Button(null, UniProtButtonArgs);
+            UniProtButton.setOnChanged(function () {
+                var url = 'http://www.uniprot.org/uniprot/?query={geneName}&sort=score'.DQXformat({ geneName: geneName });
                 window.open(url, '_blank');
             });
-            content += bt.renderHtml();
 
+            var EnsemblButtonArgs = { buttonClass: 'DQXToolButton2', content: 'Ensembl', width: 60, height: 20 };
+            var EnsemblButton = Controls.Button(null, EnsemblButtonArgs);
+            EnsemblButton.setOnChanged(function () {
+                var url = 'http://www.ensembl.org/Homo_sapiens/Search/Details?db=core;end=1;idx=Gene;q={geneName};species=Homo_sapiens;'.DQXformat({ geneName: geneName });
+                window.open(url, '_blank');
+            });
+            
+            
+            var UCSCButtonArgs = { buttonClass: 'DQXToolButton2', content: 'UCSC', width: 60, height: 20 };
+            var UCSCButton = Controls.Button(null, UCSCButtonArgs);
+            UCSCButton.setOnChanged(function () {
+                var url = 'http://genome.ucsc.edu/cgi-bin/hgTracks?hgHubConnect.destUrl=..%2Fcgi-bin%2FhgTracks&clade=mammal&org=Human&db=hg19&position={geneName}&hgt.positionInput={geneName}&hgt.suggestTrack=knownGene'.DQXformat({ geneName: geneName });
+                window.open(url, '_blank');
+            });
+            
+            
+            var HUGOButtonArgs = { buttonClass: 'DQXToolButton2', content: 'HUGO', width: 60, height: 20 };
+            var HUGOButton = Controls.Button(null, HUGOButtonArgs);
+            HUGOButton.setOnChanged(function () {
+                var url = 'http://www.genenames.org/cgi-bin/quick_search.pl?.cgifields=type&type=contains&num=50&search={geneName}&submit=Submit'.DQXformat({ geneName: geneName });
+                window.open(url, '_blank');
+            });
+            
+            
+            var buttonsList = [];
+            buttonsList.push(UniProtButton);
+            buttonsList.push(EnsemblButton);
+            buttonsList.push(UCSCButton);
+            buttonsList.push(HUGOButton);
+            
+            var verticalButtonsList = Controls.CompoundVert(buttonsList);
+            content += verticalButtonsList.renderHtml();
+            
 
-            var popupID = Popup.create("Gene " + geneid, content);
+            var popupID = Popup.create("Gene " + data['fname'], content);
 
         }
 
