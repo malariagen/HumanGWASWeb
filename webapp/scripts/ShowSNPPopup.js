@@ -1,5 +1,5 @@
-﻿define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Msg"), DQXSC("SQL"), DQXSC("DocEl"), DQXSC("Popup"), DQXSC("Controls"), DQXSC("DataFetcher/DataFetchers"), "MetaData"],
-    function (require, Framework, Msg, SQL, DocEl, Popup, Controls, DataFetchers, MetaData) {
+﻿define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Msg"), DQXSC("SQL"), DQXSC("DocEl"), DQXSC("Popup"), DQXSC("PopupFrame"), DQXSC("Controls"), DQXSC("DataFetcher/DataFetchers"), "MetaData"],
+    function (require, Framework, Msg, SQL, DocEl, Popup, PopupFrame, Controls, DataFetchers, MetaData) {
 
 
         var ShowSNPPopup = {}
@@ -23,19 +23,21 @@
 
 
         ShowSNPPopup.createPopup = function (data) {
-            var snpid = data['snpid'];
-            var content = '<div style="max-height:700px;overflow-x:none">';
+            var snpid = data['rsid'];
+
+            var tabs = []; //Will contain a list of all tabs, defined as objects with 'title' and 'content'
 
             //Create a table per group of per-country properties
             $.each(MetaData.countryPropertyGroups, function (idx0, propgroup) {
-                content += '<table class="DQXStyledTable" style="background-color:white;border:1px solid black;margin-right:25px">';
+                var tabItem = { title: propgroup.title };
+                var content = '<table class="DQXStyledTable" style="background-color:white;border:1px solid black;margin-right:25px">';
 
                 //write header
                 content += "<tr>";
                 content += "<th>";
                 content += 'Country';
                 content += "</th>";
-                $.each(propgroup, function (idx1, prop) {
+                $.each(propgroup.members, function (idx1, prop) {
                     content += "<th>";
                     content += prop.id;
                     content += "</th>";
@@ -59,7 +61,7 @@
                     content += "<td>";
                     content += '<b>' + country + '</b>';
                     content += "</td>";
-                    $.each(propgroup, function (idx2, prop) {
+                    $.each(propgroup.members, function (idx2, prop) {
                         content += "<td>";
                         var st = dataCountry[prop.id];
                         var frac = 0.0;
@@ -75,6 +77,8 @@
                     content += "</tr>";
                 });
                 content += "</table><p/>";
+                tabItem.content = content;
+                tabs.push(tabItem);
             });
 
             //Remove all country-related data values
@@ -86,8 +90,9 @@
             });
 
             //Table for Bayesian data values
-            var keys = Object.keys(data);keys.sort();//we want to show them sorted by name
-            content += '<table class="DQXStyledTable" style="background-color:white;border:1px solid black">';
+            var keys = Object.keys(data); keys.sort(); //we want to show them sorted by name
+            var tabItem = { title: 'Bayes factors' }
+            var content = '<table class="DQXStyledTable" style="background-color:white;border:1px solid black">';
             content += "<tr>";
             content += "<th>";
             content += 'ApproximateBayesianMetaAnalysis';
@@ -112,17 +117,33 @@
                     delete data[key];
                 }
             });
-            content += "</table><p/>";
+            content += "</table>";
+            tabItem.content = content;
+            tabs.push(tabItem);
 
 
             //Dump remaining data values
-            content += DQX.CreateKeyValueTable(data);
+            tabs.push({ title: 'Other', content: DQX.CreateKeyValueTable(data) });
 
-            //--> SNP popup content goes here
+            //--> SNP popup content goes here (add items to 'tabs')
 
-            content += '</div>';
+            //Creation of the PopupFrame
+            var popup = PopupFrame.PopupFrame(Framework.FrameGroupTab(''), {title: snpid, sizeX: 700, sizeY:400 });
+            var frameRoot = popup.getFrameRoot();
+            frameRoot.setFrameClass('DQXForm');
+            frameRoot.setMarginsIndividual(0, 7, 0, 0);
 
-            var popupID = Popup.create("SNP " + snpid, content);
+            $.each(tabs, function (idx, tabItem) {
+                tabItem.frame = frameRoot.addMemberFrame(Framework.FrameFinal('', 0.5)).setMargins(5).setDisplayTitle(tabItem.title).setFrameClassClient('DQXForm');
+            });
+
+            popup.render();
+
+
+            $.each(tabs, function (idx, tabItem) {
+                tabItem.frame.setContentHtml(tabItem.content);
+            });
+
 
         }
 
@@ -130,7 +151,7 @@
         ShowSNPPopup.handlePopup = function (snpid) {
             var dataFetcher = ShowSNPPopup.dataFetcherSNPDetails;
             dataFetcher.fetchFullRecordInfo(
-                SQL.WhereClause.CompareFixed('snpid', '=', snpid),
+                SQL.WhereClause.CompareFixed('rsid', '=', snpid),
                 function (data) {
                     DQX.stopProcessing();
                     ShowSNPPopup.createPopup(data);
@@ -150,6 +171,29 @@
             Msg.listen('', { type: 'ShowSNPPopup' }, function (context, snpid) {
                 ShowSNPPopup.handlePopup(snpid);
             });
+        }
+
+
+        ShowSNPPopup.create2 = function () {//a test function
+            var popup = PopupFrame.PopupFrame(Framework.FrameGroupHor(''), {});
+            var frameRoot = popup.getFrameRoot();
+            frameRoot.setFrameClass('DQXLight');
+            frameRoot.setMarginsIndividual(0, 7, 0, 0);
+
+            var settFrame = frameRoot.addMemberFrame(Framework.FrameFinal('', 0.5)).setMargins(5).setDisplayTitle('Settings');
+
+            var tabpanel = frameRoot.addMemberFrame(Framework.FrameGroupTab('', 0.5)).setMarginsIndividual(0, 7, 0, 0).setDisplayTitle('Part 2').setFrameClass('DQXLight').setFrameClassClient('DQXForm');
+
+            tabpanel.addMemberFrame(Framework.FrameFinal('', 0.5)).setMargins(5).setDisplayTitle('Tab 1');
+            tabpanel.addMemberFrame(Framework.FrameFinal('', 0.5)).setMargins(5).setDisplayTitle('Tab 2');
+
+
+            popup.render();
+
+            var settForm = Framework.Form(settFrame);
+            settForm.addControl(Controls.Static('Test'));
+            settForm.render();
+
         }
 
         return ShowSNPPopup;
