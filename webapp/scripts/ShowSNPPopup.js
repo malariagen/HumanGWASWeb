@@ -24,7 +24,7 @@
 
         ShowSNPPopup.createPopup = function (data) {
 
-            var snpid = data['rsid'];
+            var snpid = data[ MetaData.databases.Analysis.tables.SNPDetails.snpIdColumn ];
 
             var tabs = []; //Will contain a list of all tabs, defined as objects with 'title' and 'content'
 
@@ -152,7 +152,7 @@
         ShowSNPPopup.handlePopup = function (snpid) {
             var dataFetcher = ShowSNPPopup.dataFetcherSNPDetails;
             dataFetcher.fetchFullRecordInfo(
-                SQL.WhereClause.CompareFixed('rsid', '=', snpid),
+                SQL.WhereClause.CompareFixed( MetaData.databases.Analysis.tables.SNPDetails.snpIdColumn, '=', snpid),
                 function (data) {
                     DQX.stopProcessing();
                     ShowSNPPopup.createPopup(data);
@@ -166,7 +166,7 @@
         }
 
         ShowSNPPopup.init = function () {
-            ShowSNPPopup.dataFetcherSNPDetails = new DataFetchers.Curve(serverUrl, MetaData.database, MetaData.tableSNPDetails, 'pos');
+            ShowSNPPopup.dataFetcherSNPDetails = new DataFetchers.Curve(serverUrl, MetaData.databases.Analysis.url, MetaData.databases.Analysis.tables.SNPDetails.tableName, MetaData.databases.Analysis.tables.SNPDetails.positionColumn );
 
             //Create event listener for actions to open a SNP popup window
             Msg.listen('', { type: 'ShowSNPPopup' }, function (context, snpid) {

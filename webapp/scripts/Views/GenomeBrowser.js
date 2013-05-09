@@ -40,11 +40,10 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     var browserConfig = {
                         serverURL: serverUrl,
-                        //                        chromnrfield: 'chrom',
-                        chromoIdField: 'chromosome', //set this to use chromosome id's
-                        annotTableName: MetaData.tableAnnotation,
+                        chromoIdField: MetaData.databases.Analysis.tables.SNPDetails.chromosomeColumn, //set this to use chromosome id's
+                        annotTableName: MetaData.databases.Annotation.tables.Annotation.tableName,
                         viewID: 'GenomeBrowser',
-                        database: MetaData.database,
+                        database: MetaData.databases.Annotation.url,
                         annotationChannelHeight: 100,
                         canZoomVert: true
                     };
@@ -114,7 +113,12 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                 that.createSNPChannels = function () {
 
                     //Create data fetcher that will fetch the SNP data
-                    this.dataFetcherSNPs = new DataFetchers.Curve(serverUrl, MetaData.database, MetaData.tableSNPInfo, 'position');
+                    this.dataFetcherSNPs = new DataFetchers.Curve(
+                        serverUrl,
+                        MetaData.databases.Analysis.url,
+                        MetaData.databases.Analysis.tables.SNPInfo.tableName,
+                        MetaData.databases.Analysis.tables.SNPInfo.positionColumn
+                    ) ;
                     this.dataFetcherSNPs.rangeExtension = 0.5; //fetch smaller range extension for speed reasons
                     this.panelBrowser.addDataFetcher(this.dataFetcherSNPs);
 
@@ -128,8 +132,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
 
                     //Make sure we fetch the SNP id from the table
-                    this.dataFetcherSNPs.addFetchColumn("rsid", "String");
-                    this.dataFetcherSNPs.activateFetchColumn("rsid");
+                    this.dataFetcherSNPs.addFetchColumn( MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn, "String" );
+                    this.dataFetcherSNPs.activateFetchColumn( MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn );
 
 
 
@@ -168,7 +172,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         theChannel.getToolTipContent = function (compID, pointIndex) {
                             var value = this.myComponents[compID].myfetcher.getColumnPoint(pointIndex, compID);
                             if (value != null)
-                                return that.dataFetcherSNPs.getColumnPoint(pointIndex, 'rsid') + '; ' + compID + '= ' + value.toFixed(2);
+                                return that.dataFetcherSNPs.getColumnPoint(pointIndex, MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn) + '; ' + compID + '= ' + value.toFixed(2);
                             else
                                 return 'No value';
                         }
@@ -207,7 +211,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         controlsList.push(Controls.CompoundHor([/*colorIndicator,*/chk]));
 
                         theChannel.handlePointClicked = function (compID, pointIndex) {
-                            var snpid = that.dataFetcherSNPs.getColumnPoint(pointIndex, 'rsid');
+                            var snpid = that.dataFetcherSNPs.getColumnPoint(pointIndex, MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn );
                             Msg.send({ type: 'ShowSNPPopup' }, snpid);
                         }
 

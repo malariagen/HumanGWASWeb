@@ -41,7 +41,7 @@
             MetaDataDynamic.fetchedTables = {};
 
             MetaDataDynamic.fetchedTables['_dataPlotValues'] = {
-                tableName: MetaData.tablePlotValuesInfo,
+                tableName: MetaData.databases.Analysis.tables.PlotValues.tableName,
                 columns: [{ name: "column_name" }, { name: "variable_id", encoding: "IN" }, { name: "name" }, { name: "visible_in_browser" }, { name: "display_in_browser_by_default" }, { name: "display_scale"}],
                 sortColumn: "-"
             };
@@ -50,7 +50,7 @@
 
             //Perform all the data fetching
             $.each(MetaDataDynamic.fetchedTables, function (ID, tableInfo) {
-                var fetcher = DataFetcher.RecordsetFetcher(serverUrl, MetaData.database, tableInfo.tableName);
+                var fetcher = DataFetcher.RecordsetFetcher(serverUrl, MetaData.databases.Analysis.url, tableInfo.tableName);
                 $.each(tableInfo.columns, function (colidx, columnInfo) {
                     var encoding = columnInfo.encoding;
                     if (!encoding) encoding = 'ST';

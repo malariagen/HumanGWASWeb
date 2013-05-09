@@ -84,8 +84,8 @@
             var myurl = DQX.Url(serverUrl);
             myurl.addUrlQueryItem("datatype", 'recordinfo');
             myurl.addUrlQueryItem("qry", SQL.WhereClause.encode(SQL.WhereClause.CompareFixed('fid', '=', geneid)));
-            myurl.addUrlQueryItem("database", MetaData.database);
-            myurl.addUrlQueryItem("tbname", MetaData.tableAnnotation);
+            myurl.addUrlQueryItem("database", MetaData.databases.Annotation.url);
+            myurl.addUrlQueryItem("tbname", MetaData.databases.Annotation.tables.Annotation);
             $.ajax({
                 url: myurl.toString(),
                 success: function (resp) {
