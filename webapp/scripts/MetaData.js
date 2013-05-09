@@ -21,8 +21,8 @@ define([DQXSC("Utils"), "scripts/helper/log10.js"],
                     { id: 'AA', fracScale: function (data) { return data.AA / data.samplesTot }, format:"%.0f" },
                     { id: 'AB', fracScale: function (data) { return data.AB / data.samplesTot }, format: "%.0f" },
                     { id: 'BB', fracScale: function (data) { return data.BB / data.samplesTot }, format: "%.0f" },
-                    { id: 'B_allele_frequency', fracScale: function (data) { return data.B_allele_frequency }, format: "%.2f" },
-                    { id: 'maf', fracScale: function (data) { return data.maf }, format: "%.2f" }
+                    { id: 'B_allele_frequency', fracScale: function (data) { return data.B_allele_frequency }, format: "%.3f" },
+                    { id: 'maf', fracScale: function (data) { return data.maf }, format: "%.3f" }
                 ]
             },
             { 

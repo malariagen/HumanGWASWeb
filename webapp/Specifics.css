@@ -62,7 +62,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd8d8', end
 }
 
 svg {
-    border: 2px dotted red ;
+    border: 1px solid rgb(200,200,200) ;
 }
 
 .bayes_factor_plot svg rect {
