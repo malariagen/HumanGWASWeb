@@ -1,5 +1,5 @@
-﻿define([DQXSCRQ(), DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("DocEl"), DQXSC("Utils")],
-    function (require, Framework, HistoryManager, Controls, Msg, DocEl, DQX) {
+﻿define([DQXSCRQ(), DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("DocEl"), DQXSC("Utils"), "ShowSNPPopup"],
+    function (require, Framework, HistoryManager, Controls, Msg, DocEl, DQX, ShowSNPPopup) {
 
         var IntroModule = {
 
@@ -107,6 +107,15 @@
                                 DQX.executeProcessing(function () {
                                     that.myPage.frameGenomeBrowser.makeVisible();
                                 });
+                            }
+                        },
+                        {
+                            id: 'IntroTest',
+                            name: "Test",
+                            bitmap: 'Bitmaps/dna3.png',
+                            location: buttondiv1,
+                            handler: function () {
+                                ShowSNPPopup.create2();
                             }
                         }
                     ];

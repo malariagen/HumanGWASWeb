@@ -23,6 +23,7 @@
 
 
         ShowSNPPopup.createPopup = function (data) {
+
             var snpid = data['rsid'];
 
             var tabs = []; //Will contain a list of all tabs, defined as objects with 'title' and 'content'
