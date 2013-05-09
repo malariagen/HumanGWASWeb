@@ -40,11 +40,10 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
                     var browserConfig = {
                         serverURL: serverUrl,
-                        //                        chromnrfield: 'chrom',
-                        chromoIdField: 'chrom', //set this to use chromosome id's
-                        annotTableName: MetaData.tableAnnotation,
+                        chromoIdField: MetaData.tables.Annotation.chromosomeColumn, //set this to use chromosome id's
+                        annotTableName: MetaData.tables.Annotation.tableName,
                         viewID: 'GenomeBrowser',
-                        database: MetaData.database,
+                        database: MetaData.databases.Annotation.url,
                         annotationChannelHeight: 100,
                         canZoomVert: true
                     };
@@ -114,7 +113,12 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                 that.createSNPChannels = function () {
 
                     //Create data fetcher that will fetch the SNP data
-                    this.dataFetcherSNPs = new DataFetchers.Curve(serverUrl, MetaData.database, MetaData.tableSNPInfo, 'pos');
+                    this.dataFetcherSNPs = new DataFetchers.Curve(
+                        serverUrl,
+                        MetaData.databases.Analysis.url,
+                        MetaData.databases.Analysis.tables.SNPInfo.tableName,
+                        MetaData.databases.Analysis.tables.SNPInfo.positionColumn
+                    ) ;
                     this.dataFetcherSNPs.rangeExtension = 0.5; //fetch smaller range extension for speed reasons
                     this.panelBrowser.addDataFetcher(this.dataFetcherSNPs);
 
@@ -128,8 +132,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
 
                     //Make sure we fetch the SNP id from the table
-                    this.dataFetcherSNPs.addFetchColumn("snpid", "String");
-                    this.dataFetcherSNPs.activateFetchColumn("snpid");
+                    this.dataFetcherSNPs.addFetchColumn( MetaData.databases.Analysis.tables.snpIdColumn, "String" );
+                    this.dataFetcherSNPs.activateFetchColumn( MetaData.databases.Analysis.tables.snpIdColumn );
 
 
 
