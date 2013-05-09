@@ -6,7 +6,7 @@
                 "tables": {
                     "Annotation": {
                         "tableName": "refGeneConverted",
-                        "chromosomeColumn": "chrom",
+                        "chromosomeColumn": "chromid",
                         "positionColumn": "pos"
                     }
                 }
@@ -33,7 +33,7 @@
             }
         },
         "countries": [ "BurkinaFaso", "Cameroon", "Gambia", "Ghana", "Kenya", "Malawi", "Mali", "Tanzania" ],
-        chromosomes = [
+        "chromosomes": [
             { "id": "01", "name": "01", "len": 250 },
             { "id": "02", "name": "02", "len": 245 },
             { "id": "03", "name": "03", "len": 205 },

@@ -5,14 +5,16 @@ define([DQXSC("Utils")],
 		    type: 'GET',
 		    url: 'resources/metadata.json',
 		    dataType: 'json',
-		    success: function( data ) { MetaData = data ; },
+		    success: function( data ) { MetaData = data.MetaData ; },
 		    data: {},
 		    async: false
 		});
 
-        //Groups of properties that are available on a per-country basis.
+		var signifStyle = 'FragmentBarRed';
+
+		//Groups of properties that are available on a per-country basis.
 		//Setting these here because they have functions which JSON doesn't support.
-        MetaData.countryPropertyGroups = [
+		MetaData.countryPropertyGroups = [
 	        { 
 	            title: 'Alleles',
 	            members:
