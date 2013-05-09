@@ -41,7 +41,7 @@
             MetaDataDynamic.fetchedTables = {};
 
             MetaDataDynamic.fetchedTables['_dataPlotValues'] = {
-                tableName: MetaData.tablePlotValuesInfo,
+                tableName: MetaData.databases.Analysis.tables.PlotValues.tableName,
                 columns: [{ name: "column_name" }, { name: "variable_id", encoding: "IN" }, { name: "name" }, { name: "visible_in_browser" }, { name: "display_in_browser_by_default" }, { name: "display_scale"}],
                 sortColumn: "-"
             };
