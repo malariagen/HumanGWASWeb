@@ -2,14 +2,15 @@ define([DQXSC("Utils")],
     function (DQX) {
         var MetaData = {};
 
+
         function log10(val) {
             return Math.log(val) / Math.LN10;
         }
 
 
-        MetaData.database = "dqx_boilerplate_db"; //name of the database used
+        MetaData.database = "panoptes_human"; //name of the database used
 
-        MetaData.database = "/mnt/storage/malariagen/human/website/data/analysis.sqlite";
+        //MetaData.database = "/mnt/storage/malariagen/human/website/data/analysis.sqlite";
 
         MetaData.tablePlotValuesInfo = "GenomeBrowserPlotValues"; //Table containing info about the plot value columns as provided in the table "MetaData.tableSNPInfo"
 
