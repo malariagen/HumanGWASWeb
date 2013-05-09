@@ -113,8 +113,8 @@
                 var plotheight = 150 ;
                 var plotwidth = 500 ;
                 var margins = {
-                    left: 80,
-                    right: 50,
+                    left: 70,
+                    right: 70,
                     top: 10,
                     bottom: 200
                 } ;
