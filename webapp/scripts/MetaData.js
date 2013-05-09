@@ -12,6 +12,8 @@ define([DQXSC("Utils")],
 
         //MetaData.database = "/mnt/storage/malariagen/human/website/data/analysis.sqlite";
 
+        MetaData.tableAnnotation = 'refGeneConverted';
+
         MetaData.tablePlotValuesInfo = "GenomeBrowserPlotValues"; //Table containing info about the plot value columns as provided in the table "MetaData.tableSNPInfo"
 
         MetaData.tableSNPInfo = "ManhattanData"; //Table containing the snp data uses to show in the plot
@@ -38,9 +40,9 @@ define([DQXSC("Utils")],
             { id: 'controls_AB', fracScale: function (data) { return data.controls_AB / data.samplesTot } },
             { id: 'cases_BB', fracScale: function (data) { return data.cases_BB / data.samplesTot } },
             { id: 'controls_BB', fracScale: function (data) { return data.controls_BB / data.samplesTot } },
-/*            { id: 'cases_NULL', fracScale: function (data) { return data.cases_NULL / data.samplesTot } },
-            { id: 'controls_NULL', fracScale: function (data) { return data.controls_NULL / data.samplesTot } },
-            { id: 'NULL' }*/
+        /*            { id: 'cases_NULL', fracScale: function (data) { return data.cases_NULL / data.samplesTot } },
+        { id: 'controls_NULL', fracScale: function (data) { return data.controls_NULL / data.samplesTot } },
+        { id: 'NULL' }*/
             ],
             [
             { id: 'info' },
