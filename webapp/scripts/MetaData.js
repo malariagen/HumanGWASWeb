@@ -66,6 +66,10 @@ define([DQXSC("Utils"), "scripts/helper/log10.js"],
                 } else if( v.substring( 0, 5 ) == 'rho=0' ) {
                     v = v.replace( 'rho=1', 'independent-effect' ) ;
                 }
+            } else if( v == "Fixed-effect meta analysis pvalue" ) {
+                v = "Fixed-effect P-value" ;
+            } else if( v == "mean_bf" ) {
+                v = "Mean Bayes factor" ;
             }
             return v ;
         }
