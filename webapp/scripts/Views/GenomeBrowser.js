@@ -152,7 +152,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         if (isPVal) { scaleMin = 0; scaleMax = 7; }
                         if (isBayesFactor) { scaleMin = -1; scaleMax = 7; }
                         var theChannel = ChannelYVals.Channel(plotValue.id, { minVal: scaleMin, maxVal: scaleMax });
-                        theChannel.setTitle(plotValue.id);
+                        theChannel.setTitle(plotValue.name);
                         theChannel.setHeight(200, true);
                         that.panelBrowser.addChannel(theChannel, false);
 
