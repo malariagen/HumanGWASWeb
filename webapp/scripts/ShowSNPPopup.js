@@ -473,20 +473,30 @@
 	        var snpid = data[ MetaData.databases.Analysis.tables.SNPDetails.snpIdColumn ];
             var tabs = []; //Will contain a list of all tabs, defined as objects with 'title' and 'content'
 
+            var this_obj = this ;
             {
-                var tabItem = { title: "Overview" } ;
+                var tabItem = {
+                    title: "Overview",
+                    content: "<div>We need to populate this!</div>"
+                } ;
                 tabs.push( tabItem ) ;
             }
 
-            var this_obj = this ;
+            tabs.push( this_obj.createForestPlotTab( snpid, data ) );
+            tabs.push( this_obj.createBayesFactorTab( snpid, data ) );
+
             //Create a table per group of per-country properties
             $.each(MetaData.countryPropertyGroups, function (idx0, propgroup) {
                 tabs.push( this_obj.createPropertyGroupTab( data, propgroup ) ) ;
             });
 
-            tabs.push( this_obj.createForestPlotTab( snpid, data ) );
-            tabs.push( this_obj.createBayesFactorTab( snpid, data ) );
-
+            //Remove all country-related data values
+            $.each(MetaData.countries, function (idx1, country) {
+                $.each(data, function (key, val) {
+                    if (key.split(':')[0] == country)
+                        delete data[key];
+                });
+            });
 
             //Dump remaining data values
             tabs.push({ title: 'Other', content: DQX.CreateKeyValueTable(data) });
