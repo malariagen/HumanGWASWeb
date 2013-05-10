@@ -1,6 +1,6 @@
 ﻿
-define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("SQL"), DQXSC("DocEl"), DQXSC("Utils"), DQXSC("FrameList"), DQXSC("ChannelPlot/GenomePlotter"), DQXSC("ChannelPlot/ChannelSequence"), DQXSC("ChannelPlot/ChannelSnps"), DQXSC("ChannelPlot/ChannelYVals"), DQXSC("DataFetcher/DataFetcherFile"), DQXSC("DataFetcher/DataFetchers"), DQXSC("DataFetcher/DataFetcherSummary"), "MetaData", "MetaDataDynamic"],
-    function (require, Framework, Controls, Msg, SQL, DocEl, DQX, FrameList, GenomePlotter, ChannelSequence, ChannelSnps, ChannelYVals, DataFetcherFile, DataFetchers, DataFetcherSummary, MetaData, MetaDataDynamic) {
+define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("SQL"), DQXSC("DocEl"), DQXSC("Utils"), DQXSC("FrameList"), DQXSC("FrameTree"), DQXSC("ChannelPlot/GenomePlotter"), DQXSC("ChannelPlot/ChannelSequence"), DQXSC("ChannelPlot/ChannelSnps"), DQXSC("ChannelPlot/ChannelYVals"), DQXSC("DataFetcher/DataFetcherFile"), DQXSC("DataFetcher/DataFetchers"), DQXSC("DataFetcher/DataFetcherSummary"), "MetaData", "MetaDataDynamic"],
+    function (require, Framework, Controls, Msg, SQL, DocEl, DQX, FrameList, FrameTree, GenomePlotter, ChannelSequence, ChannelSnps, ChannelYVals, DataFetcherFile, DataFetchers, DataFetcherSummary, MetaData, MetaDataDynamic) {
 
         var GenomeBrowserModule = {
 
@@ -49,7 +49,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     };
 
                     //Intialise the form with the controls
-                    this.panelControls = Framework.Form(this.frameControls);
+                    this.panelControls = FrameTree.Tree(this.frameControls);
 
                     //Initialise the browser
                     this.panelBrowser = GenomePlotter.Panel(this.frameBrowser, browserConfig);
@@ -118,7 +118,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                         MetaData.databases.Analysis.url,
                         MetaData.databases.Analysis.tables.SNPInfo.tableName,
                         MetaData.databases.Analysis.tables.SNPInfo.positionColumn
-                    ) ;
+                    );
                     this.dataFetcherSNPs.rangeExtension = 0.5; //fetch smaller range extension for speed reasons
                     this.panelBrowser.addDataFetcher(this.dataFetcherSNPs);
 
@@ -132,8 +132,8 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
 
 
                     //Make sure we fetch the SNP id from the table
-                    this.dataFetcherSNPs.addFetchColumn( MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn, "String" );
-                    this.dataFetcherSNPs.activateFetchColumn( MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn );
+                    this.dataFetcherSNPs.addFetchColumn(MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn, "String");
+                    this.dataFetcherSNPs.activateFetchColumn(MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn);
 
 
 
@@ -208,10 +208,11 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                             that.panelBrowser.render();
                         });
                         plotValue.visibilityCheckBox = chk;
-                        controlsList.push(Controls.CompoundHor([/*colorIndicator,*/chk]));
+                        chk.propertyClass = plotValue.propertyClass;
+                        controlsList.push(chk);
 
                         theChannel.handlePointClicked = function (compID, pointIndex) {
-                            var snpid = that.dataFetcherSNPs.getColumnPoint(pointIndex, MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn );
+                            var snpid = that.dataFetcherSNPs.getColumnPoint(pointIndex, MetaData.databases.Analysis.tables.SNPInfo.snpIdColumn);
                             Msg.send({ type: 'ShowSNPPopup' }, snpid);
                         }
 
@@ -259,13 +260,22 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                             });
                             that.panelBrowser.render();
                         });
-                        controlsList.push(Controls.CompoundHor([chk]));
+                        chk.propertyClass = 'Misc';
+                        controlsList.push(chk);
                     }
 
 
 
                     //Add the checkboxes that control the visibility of the components
-                    that.panelControls.addControl(Controls.CompoundVert(controlsList));
+                    var propertyClassesMap = {}
+                    $.each(controlsList, function (idx, control) {
+                        if (!(control.propertyClass in propertyClassesMap)) {
+                            propertyClassesMap[control.propertyClass] = that.panelControls.root.addItem(FrameTree.Branch(control.propertyClass, DocEl.StyledText(control.propertyClass, 'DQXLarge'))).setCanSelect(false);
+                        }
+                        propertyClassesMap[control.propertyClass].addItem(FrameTree.Control(control));
+                    });
+
+                    //that.panelControls.addControl(Controls.CompoundVert(controlsList));
                     this.panelControls.render();
 
                 }
