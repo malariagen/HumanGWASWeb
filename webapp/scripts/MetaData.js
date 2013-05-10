@@ -43,27 +43,29 @@ define([DQXSC("Utils"), "scripts/helper/log10.js"],
                 title: 'Frequentist',
                 members: [
                     { id: 'info', format: "%.2f" },
-                    { id: 'pvalue', fracScale: function (data) { return -log10(data.pvalue) / 10.0 }, fracStyle: signifStyle, format: "%.2f" },
-                    { id: 'se_1', format: "%.2f" },
-                    { id: 'beta_1', format: "%.2f" }
+                    { id: 'pvalue', fracScale: function (data) { return -log10(data.pvalue) / 10.0 }, fracStyle: signifStyle, format: "%.2e" },
+                    { id: 'se_1', format: "%.3f" },
+                    { id: 'beta_1', format: "%.3f" }
                 ]
             }
         ];
         
-        MetaData.bayesFactorNameFormatter = function( v ) {
-            // Remove boilerplate
-            v = v.replace( 'ApproximateBayesianMetaAnalysis/', '' )
-                .replace( '/bf', '' )
-            ;
-            // Get rid of unnecessary rho specs..
-            if( v.indexOf( '-specific' ) != -1 && v.indexOf( 'West-africa' ) == -1 && v.indexOf( 'East-africa' ) == -1 ) {
-                v = v.replace( 'rho=1/', '' ) ;
-            }
-            // rename some variables.
-            if( v.substring( 0, 5 ) == 'rho=1' ) {
-                v = v.replace( 'rho=1', 'fixed-effect' ) ;
-            } else if( v.substring( 0, 5 ) == 'rho=0' ) {
-                v = v.replace( 'rho=1', 'independent-effect' ) ;
+        MetaData.formatVariableName = function( v ) {
+            if( v.indexOf( '/bf' ) != -1 ) {
+                // Remove boilerplate
+                v = v.replace( 'ApproximateBayesianMetaAnalysis/', '' )
+                    .replace( '/bf', '' )
+                ;
+                // Get rid of unnecessary rho specs..
+                if( v.indexOf( '-specific' ) != -1 && v.indexOf( 'West-africa' ) == -1 && v.indexOf( 'East-africa' ) == -1 ) {
+                    v = v.replace( 'rho=1/', '' ) ;
+                }
+                // rename some variables.
+                if( v.substring( 0, 5 ) == 'rho=1' ) {
+                    v = v.replace( 'rho=1', 'fixed-effect' ) ;
+                } else if( v.substring( 0, 5 ) == 'rho=0' ) {
+                    v = v.replace( 'rho=1', 'independent-effect' ) ;
+                }
             }
             return v ;
         }
