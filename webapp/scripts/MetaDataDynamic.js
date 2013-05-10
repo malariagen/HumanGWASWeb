@@ -19,9 +19,10 @@
                     id: this._dataPlotValues.column_name[i],
                     /* name: this._dataPlotValues.name[i].replace(/\//g, "; "), */
                     name: MetaData.formatVariableName( this._dataPlotValues.name[i] ),
-                    defaultVisible: parseInt(this._dataPlotValues.display_in_browser_by_default[i])>0,
+                    defaultVisible: parseInt(this._dataPlotValues.display_in_browser_by_default[i]) > 0,
                     valueClass: this._dataPlotValues.display_scale[i]
                 };
+                Item.propertyClass = Item.valueClass;//Note: this is used to divide the values into logical groups
                 this.genomePlotValues.push(Item);
             }
 
@@ -29,7 +30,7 @@
         }
 
         MetaDataDynamic.handleFetchError = function (msg) {
-//            DQX.stopProcessing();
+            //            DQX.stopProcessing();
             if (!MetaDataDynamic.fetchErrorReported) {
                 MetaDataDynamic.fetchErrorReported = true;
                 alert('ERROR: failed to fetch data from the server: ' + msg);
@@ -59,12 +60,12 @@
                 });
                 fetcher.getData(SQL.WhereClause.Trivial(), tableInfo.sortColumn, function (data) {
                     MetaDataDynamic[ID] = data;
-//                    DQX.stopProcessing();
+                    //                    DQX.stopProcessing();
                     MetaDataDynamic.tryBuildMetaDataStructures(onCompletedHandler);
                 },
                             MetaDataDynamic.handleFetchError
                         );
-//                DQX.setProcessing("Downloading...");
+                //                DQX.setProcessing("Downloading...");
             });
         }
 

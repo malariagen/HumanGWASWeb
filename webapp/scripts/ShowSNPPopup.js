@@ -110,7 +110,7 @@
                     models = models.concat( l.models ) ;
                 } ) ;
 
-                console.log( "Plotting:", MetaData, models, this.data ) ;
+                //console.log( "Plotting:", MetaData, variables, this.data ) ;
 
                 var plotheight = 150 ;
                 var plotwidth = 500 ;
