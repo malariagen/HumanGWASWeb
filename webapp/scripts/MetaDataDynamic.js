@@ -17,7 +17,8 @@
             for (var i = 0; i < this._dataPlotValues.column_name.length; i++) {
                 var Item = {
                     id: this._dataPlotValues.column_name[i],
-                    name: this._dataPlotValues.name[i].replace(/\//g, "; "),
+                    /* name: this._dataPlotValues.name[i].replace(/\//g, "; "), */
+                    name: MetaData.formatVariableName( this._dataPlotValues.name[i] ),
                     defaultVisible: parseInt(this._dataPlotValues.display_in_browser_by_default[i])>0,
                     valueClass: this._dataPlotValues.display_scale[i]
                 };
