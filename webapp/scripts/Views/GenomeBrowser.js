@@ -270,7 +270,7 @@ define([DQXSCRQ(), DQXSC("Framework"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("S
                     var propertyClassesMap = {}
                     $.each(controlsList, function (idx, control) {
                         if (!(control.propertyClass in propertyClassesMap)) {
-                            propertyClassesMap[control.propertyClass] = that.panelControls.root.addItem(FrameTree.Branch(control.propertyClass, DocEl.StyledText(control.propertyClass, 'DQXLarge'))).setCanSelect(false);
+                            propertyClassesMap[control.propertyClass] = that.panelControls.root.addItem(FrameTree.Branch(''+idx, DocEl.StyledText(control.propertyClass, 'DQXLarge'))).setCanSelect(false);
                         }
                         propertyClassesMap[control.propertyClass].addItem(FrameTree.Control(control));
                     });
