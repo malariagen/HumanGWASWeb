@@ -20,9 +20,10 @@
                     /* name: this._dataPlotValues.name[i].replace(/\//g, "; "), */
                     name: MetaData.formatVariableName( this._dataPlotValues.name[i] ),
                     defaultVisible: parseInt(this._dataPlotValues.display_in_browser_by_default[i]) > 0,
-                    valueClass: this._dataPlotValues.display_scale[i]
+                    valueClass: this._dataPlotValues.display_scale[i],
+                    propertyClass: this._dataPlotValues.variable_group[i]
                 };
-                Item.propertyClass = Item.valueClass;//Note: this is used to divide the values into logical groups
+                //Item.propertyClass = Item.valueClass;//Note: this is used to divide the values into logical groups
                 this.genomePlotValues.push(Item);
             }
 
@@ -44,7 +45,7 @@
 
             MetaDataDynamic.fetchedTables['_dataPlotValues'] = {
                 tableName: MetaData.databases.Analysis.tables.PlotValues.tableName,
-                columns: [{ name: "column_name" }, { name: "variable_id", encoding: "IN" }, { name: "name" }, { name: "visible_in_browser" }, { name: "display_in_browser_by_default" }, { name: "display_scale"}],
+                columns: [{ name: "column_name" }, { name: "variable_id", encoding: "IN" }, { name: "name" }, { name: "visible_in_browser" }, { name: "display_in_browser_by_default" }, { name: "display_scale"}, { name: "variable_group" }],
                 sortColumn: "-"
             };
 
