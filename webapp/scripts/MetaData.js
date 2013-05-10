@@ -61,10 +61,10 @@ define([DQXSC("Utils"), "scripts/helper/log10.js"],
                     v = v.replace( 'rho=1/', '' ) ;
                 }
                 // rename some variables.
-                if( v.substring( 0, 5 ) == 'rho=1' ) {
-                    v = v.replace( 'rho=1', 'fixed-effect' ) ;
-                } else if( v.substring( 0, 5 ) == 'rho=0' ) {
-                    v = v.replace( 'rho=1', 'independent-effect' ) ;
+                if( v.substring( 0, 6 ) == 'rho=1/' ) {
+                    v = v.replace( 'rho=1/', 'fixed-effect/' ) ;
+                } else if( v.substring( 0, 6 ) == 'rho=0/' ) {
+                    v = v.replace( 'rho=0/', 'independent-effect/' ) ;
                 }
             } else if( v == "Fixed-effect meta analysis pvalue" ) {
                 v = "Fixed-effect P-value" ;
