@@ -13,7 +13,6 @@
             if( val === undefined || val == "None" ) {
                 rs += 'NA' ;
             } else {
-                console.log( "Format:", format, "val:", val ) ;
                 rs += sprintf( format, val );
             }
             if (frac > 0.01)
@@ -92,23 +91,26 @@
                     var value = data[ key ] ;
                     if( (!(value === undefined )) && ( value == value ) && value != "None" ) {
                         value = parseFloat( value ) ;
-                        tabItem.data.push( { variable: MetaData.bayesFactorNameFormatter( key ), value: value } ) ;
+                        tabItem.data.push( { variable: MetaData.formatVariableName( key ), value: value } ) ;
                         sum_of_bfs += parseFloat( value ) ;
                     }
                 }
             } ) ;
 
-            $.each( tabItem.data, function( d ) {
-                d.scaled_value = d.value / sum_of_bfs ;
-            })
-
-            tabItem.variables = MetaData.formattedMetaAnalysisModelNameOrder ;
+            tabItem.variables = MetaData.MetaAnalysisModelGroups ;
             
             tabItem.render = function() {
                 //var variables = this.data.map( function( d ) { return d.variable ; } ).sort() ;
-                var variables = this.variables ;
+                var models = [] ;
+                $.each( this.variables, function( idx, l ) {
+                    if( idx > 0 ) {
+                        // kludge to make some space.
+                        models.push( "spacer" + idx ) ;
+                    }
+                    models = models.concat( l.models ) ;
+                } ) ;
 
-                console.log( "Plotting:", MetaData, variables, this.data ) ;
+                console.log( "Plotting:", MetaData, models, this.data ) ;
 
                 var plotheight = 150 ;
                 var plotwidth = 500 ;
@@ -122,7 +124,7 @@
                 var height = margins.top + margins.bottom + plotheight ;
 
                 //Table for Bayesian data values
-                var plot = d3.select( '.bayes_factor_plot[snpid=' + snpid + ']' )
+                var plot = d3.select( '.bayes_factor_plot[snpid="' + snpid + '"]' )
                     .append( 'svg' )
                     .attr( 'class', 'bar_plot' )
                     .attr( 'width', width )
@@ -133,15 +135,14 @@
                     .range( [ plotheight, margins.top ] ) ;
 
                 var x_scale = d3.scale.ordinal()
-                    .domain( variables )
-                    .range( [ margins.left, width ] )
-                    .rangeBands( [ margins.left, width - margins.right ] ) ;
+                    .domain( models )
+                    .rangeBands( [ margins.left, margins.left + plotwidth ] ) ;
 
-                plot.selectAll( 'line[class="haxistick"]' )
-                    .data( variables )
+                plot.selectAll( 'line.hAxisTick' )
+                    .data( models.filter( function( d ) { return ( d.indexOf( 'spacer' ) == -1 ) ; }) )
                     .enter()
                     .append( "line" )
-                    .attr( 'class', 'haxistick' )
+                    .attr( 'class', 'hAxisTick' )
                     .attr( 'x1', function( d ) { return x_scale( d ) + 5; })
                     .attr( 'x2', function( d ) { return x_scale( d ) + 5 ; })
                     .attr( 'y1', plotheight )
@@ -149,33 +150,34 @@
                     .text( function( d ) { return d ; } )
                 ;
 
-                plot.selectAll( 'text[class="haxislabel"]' )
-                    .data( variables )
+                plot.selectAll( 'text.hAxisLabel' )
+                    .data( models.filter( function( d ) { return ( d.indexOf( 'spacer' ) == -1 ) ; }) )
                     .enter()
                     .append( "text" )
-                    .attr( 'class', 'haxislabel' )
+                    .attr( 'class', 'hAxisLabel' )
                     .attr( 'dominant-baseline', 'central' )
                     .attr( 'text-align', 'start' )
                     .attr( 'transform', function( d ) { return "translate(" + ( x_scale( d ) + 5 ) + "," + ( plotheight + 6 ) + ") rotate( 60 )" ; } )
-                    .text( function( d ) { return d ; } )
+                    .text( function( d ) {console.log( d ) ;
+                     return d ; } )
                 ;
 
-                plot.selectAll( 'line[class="vaxistick"]' )
+                plot.selectAll( 'line.vAxisTick' )
                     .data( y_scale.ticks( 10 ) )
                     .enter()
                     .append( "line" )
-                    .attr( 'class', 'vaxistick' )
+                    .attr( 'class', 'vAxisTick' )
                     .attr( 'x1', margins.left - 6 )
                     .attr( 'x2', margins.left - 1 )
                     .attr( 'y1', y_scale )
                     .attr( 'y2', y_scale )
                 ;
 
-                plot.selectAll( 'text[class="vaxislabel"]' )
+                plot.selectAll( 'text.vAxisLabel' )
                     .data( y_scale.ticks( 10 ) )
                     .enter()
                     .append( "text" )
-                    .attr( 'class', 'vaxislabel' )
+                    .attr( 'class', 'vAxisLabel' )
                     .attr( 'x', margins.left - 6 )
                     .attr( 'dx', -3 )
                     .attr( 'y', y_scale )
@@ -202,6 +204,271 @@
             return tabItem ;
         }
 
+        ShowSNPPopup.createForestPlotTab = function( snpid, data ) {
+            var tabItem = {
+                title: "Effect size",
+                content: '<div class="effect_size_plot" snpid="' + snpid + '"></div>',
+                snpid: snpid
+            } ;
+
+            var keys = Object.keys(data);
+            keys.sort(); //we want to show them sorted by name
+            tabItem.data = []
+            console.log( "data:", data ) ;
+            $.each( MetaData.countries, function ( idx, country ) {
+                var beta = parseFloat( data[ country + ":beta_1" ] ) ;
+                var se = parseFloat( data[ country + ":se_1" ] ) ;
+                var frequency = parseFloat( data[ country + ":B_allele_frequency" ] ) ;
+                tabItem.data.push(
+                    {
+                        "country": country,
+                        "beta": beta,
+                        "se": se,
+                        "OR": Math.exp( beta ),
+                        "CI_lower": Math.exp( beta - ( 1.96 * se ) ),
+                        "CI_upper": Math.exp( beta + ( 1.96 * se ) ),
+                        "frequency": frequency
+                    }
+                ) ;
+            } ) ;
+
+            tabItem.render = function() {
+                var countries = MetaData.countries ;
+                console.log( "Plotting:", countries, this.data ) ;
+
+                var plotheight = 300 ;
+                var plotwidth = 400 ;
+                var margins = {
+                    left: 100,
+                    right: 120,
+                    top: 10,
+                    bottom: 50
+                } ;
+                var width = margins.left + margins.right + plotwidth ;
+                var height = margins.top + margins.bottom + plotheight ;
+                var plotbottom = margins.top + plotheight ;
+                var plotright = margins.left + plotwidth ;
+
+                var plot = d3.select( '.effect_size_plot[snpid="' + snpid + '"]' )
+                    .append( 'svg' )
+                    .attr( 'class', 'forest_plot' )
+                    .attr( 'snpid', snpid )
+                    .attr( 'width', width )
+                    .attr( 'height', height ) ;
+
+                var y_scale = d3.scale.ordinal()
+                    .domain( countries )
+                    .rangeRoundBands( [ margins.top + 10, plotbottom - 10 ] ) ;
+
+                var x_scale = d3.scale.log()
+                    .domain( [ 1/8, 8 ] )
+                    .range( [ margins.left + 5, margins.left + plotwidth - 5 ] );
+
+                plot.selectAll( 'text.yAxisLegend' )
+                    .data( [ 'Population' ])
+                    .enter()
+                    .append( 'text' )
+                    .attr( 'class', 'yAxisLegend' )
+                    .attr( 'dominant-baseline', 'central' )
+                    .attr( 'text-anchor', 'middle' )
+                    .attr( 'transform', function( d ) { return "translate(10," + (( margins.top + plotbottom ) / 2) + ") rotate( -90 )" ; } )
+                    .text( function( d ) { return d ; } )
+                ;
+
+                plot.selectAll( 'text.xAxisLegend' )
+                    .data( [ 'OR (with 95% confidence interval)' ])
+                    .enter()
+                    .append( 'text' )
+                    .attr( 'class', 'xAxisLegend' )
+                    .attr( 'dominant-baseline', 'text-before-edge' )
+                    .attr( 'text-anchor', 'middle' )
+                    .attr( 'x', ( margins.left + plotright ) / 2 )
+                    .attr( 'y', height - 20 )
+                    .text( function( d ) { return d ; } )
+                ;
+
+                plot.selectAll( 'line.hAxisTick' )
+                    .data( [ 1/8, 1/4, 1/2, 1, 2, 4, 8 ] )
+                    .enter()
+                    .append( "line" )
+                    .attr( 'class', 'hAxisTick' )
+                    .attr( 'x1', function( d ) { return x_scale( d ) ; })
+                    .attr( 'x2', function( d ) { return x_scale( d ) ; })
+                    .attr( 'y1', plotbottom )
+                    .attr( 'y2', plotbottom + 5 )
+                ;
+
+                plot.selectAll( 'line.vertGrid' )
+                    .data( [ 1/8, 1/4, 1/2, 1, 2, 4, 8 ] )
+                    .enter()
+                    .append( "line" )
+                    .attr( 'class', 'vertGrid' )
+                    .attr( 'x1', function( d ) { return x_scale( d ) ; })
+                    .attr( 'x2', function( d ) { return x_scale( d ) ; })
+                    .attr( 'y1', margins.top + 2 )
+                    .attr( 'y2', plotbottom - 2 )
+                ;
+
+                plot.selectAll( 'text.hAxisLabel' )
+                    .data( [
+                        { x: 1/8, label: '1/8' },
+                        { x: 1/4, label:'1/4' },
+                        { x: 1/2, label: '1/2' },
+                        { x: 1, label: '1' },
+                        { x: 2, label: '2' },
+                        { x: 4, label: '4' },
+                        { x: 8, label: '8' }
+                    ] )
+                    .enter()
+                    .append( "text" )
+                    .attr( 'class', 'hAxisLabel' )
+                    .attr( 'dominant-baseline', 'text-before-edge' )
+                    .attr( 'text-anchor', 'middle' )
+                    .attr( 'x', function( d ) { return x_scale( d.x ) ; } )
+                    .attr( 'y', plotbottom + 6 )
+                    .text( function( d ) { return d.label ; } )
+                ;
+
+                plot.selectAll( 'line.vAxisTick' )
+                    .data( countries )
+                    .enter()
+                    .append( "line" )
+                    .attr( 'class', 'vAxisTick' )
+                    .attr( 'x1', margins.left - 6 )
+                    .attr( 'x2', margins.left - 1 )
+                    .attr( 'y1', y_scale )
+                    .attr( 'y2', y_scale )
+                ;
+
+                plot.selectAll( 'text.vAxisLabel' )
+                    .data( countries )
+                    .enter()
+                    .append( "text" )
+                    .attr( 'class', 'vAxisLabel' )
+                    .attr( 'x', margins.left - 6 )
+                    .attr( 'dx', -3 )
+                    .attr( 'y', y_scale )
+                    .attr( 'dominant-baseline', 'central' )
+                    .attr( 'text-anchor', 'end' )
+                    .text(
+                        function( d ) {
+                            return d ;
+                        }
+                    )
+                ;
+
+                var error_bars = plot.selectAll( 'g.error_bar' )
+                    .data( this.data )
+                    .enter()
+                    .append( 'g' )
+                    .attr( 'class', 'frequency_marker' )
+                ;
+                error_bars
+                    .selectAll( 'line' )
+                    .data( function( d ) { console.log( "d=", d ) ; return [
+                        { x1: d.CI_lower, x2: d.CI_lower, y1: y_scale( d.country ) - 4, y2: y_scale( d.country ) + 4 },
+                        { x1: d.CI_lower, x2: d.CI_upper, y1: y_scale( d.country ), y2: y_scale( d.country ) },
+                        { x1: d.CI_upper, x2: d.CI_upper, y1: y_scale( d.country ) - 4, y2: y_scale( d.country ) + 4 }
+                        ]
+                    } )
+                    .enter()
+                    .append( 'line' )
+                    .attr( 'x1', function( d ) { return x_scale( d.x1 ) ; } )
+                    .attr( 'x2', function( d ) { return x_scale( d.x2 ) ; } )
+                    .attr( 'y1', function( d ) { return d.y1 ; } )
+                    .attr( 'y2', function( d ) { return d.y2 ; } )
+                ;
+                
+                var frequencies = this.data.map( function( d ) { return d.frequency ; } ).sort() ;
+                var radius_scale = d3.scale.linear()
+                    .domain( [ frequencies[0], frequencies[ frequencies.length - 1 ] ] )
+                    .range( [ 2, 12 ] ) ;
+
+                plot.selectAll( 'circle.frequency_marker' )
+                    .data( this.data )
+                    .enter()
+                    .append( 'circle' )
+                    .attr( 'class', 'frequency_marker' )
+                    .attr( 'cx', function( d ) { return x_scale( d.OR ) ; } )
+                    .attr( 'cy', function( d ) { return y_scale( d.country ) ; } )
+                    .attr( 'r', function( d ) { return radius_scale( d.frequency ) ; } )
+                ;
+                var OR_markers = plot.selectAll( 'g.OR_marker' )
+                    .data( this.data )
+                    .enter()
+                    .append( 'g' )
+                    .attr( 'class', 'OR_marker' )
+                ;
+                
+                OR_markers
+                    .selectAll( "line" )
+                    .data( function( d ) {
+                        return [
+                            { x1: x_scale( d.OR ), x2: x_scale( d.OR ), y1:y_scale( d.country ) - 2, y2: y_scale( d.country ) + 2 },
+                            { x1: x_scale( d.OR ) - 2, x2: x_scale( d.OR ) + 2, y1:y_scale( d.country ), y2: y_scale( d.country ) }
+                        ]
+                    })
+                    .enter()
+                    .append( 'line' )
+                    .attr( 'x1', function( d ) { return d.x1 ; } )
+                    .attr( 'x2', function( d ) { return d.x2 ; } )
+                    .attr( 'y1', function( d ) { return d.y1 ; } )
+                    .attr( 'y2', function( d ) { return d.y2 ; } )
+                ;
+                
+                
+                var legendData = radius_scale.ticks( 5 ).map(
+                    function( frequency, index ) {
+                        return {
+                            frequency: frequency,
+                            index: index,
+                            y: (( margins.top + plotbottom ) / 2 ) - 60 + ( index * 30 )
+                        }
+                    }
+                ) ;
+
+                var legend = plot.selectAll( 'g.frequencyLegend' )
+                    .data( legendData )
+                    .enter()
+                    .append( 'g' )
+                    .attr( 'class', 'frequencyLegend' ) ;
+
+                legend.selectAll( 'circle.frequency_marker' )
+                    .data( function( d ) { return [ d ] } )
+                    .enter()
+                    .append( 'circle' )
+                    .attr( 'class', 'frequency_marker' )
+                    .attr( 'cx', plotright + 30 )
+                    .attr( 'cy', function( d ) { return d.y ; } )
+                    .attr( 'r', function( d ) { return radius_scale( d.frequency ) ; } )
+                ;
+
+                legend.selectAll( 'text' )
+                    .data( function( d ) { return [ d ] } )
+                    .enter()
+                    .append( 'text' )
+                    .attr( 'text-anchor', 'start' )
+                    .attr( 'dominant-baseline', 'central' )
+                    .attr( 'x', plotright + 60 )
+                    .attr( 'y', function( d ) { return d.y ; } )
+                    .text( function( d ) { return d.frequency + "" ; })
+                ;
+                
+                legend.selectAll( 'text.legendTitle' )
+                    .data( [ "Frequency"] )
+                    .enter()
+                    .append( 'text' )
+                    .attr( 'class', 'legendTitle'  )
+                    .attr( 'text-anchor', 'middle' )
+                    .attr( 'x', plotright + 55 )
+                    .attr( 'y', (( margins.top + plotbottom ) / 2 ) - 80 )
+                    .text( 'Frequency' )
+                ;
+            }
+
+            return tabItem ;
+        }
+
         ShowSNPPopup.createPopup = function (data) {
 	        var snpid = data[ MetaData.databases.Analysis.tables.SNPDetails.snpIdColumn ];
             var tabs = []; //Will contain a list of all tabs, defined as objects with 'title' and 'content'
@@ -211,25 +478,13 @@
                 tabs.push( tabItem ) ;
             }
 
-            {
-                var tabItem = { title: "Size of effect" } ;
-                tabs.push( tabItem ) ;
-            }
-
             var this_obj = this ;
             //Create a table per group of per-country properties
             $.each(MetaData.countryPropertyGroups, function (idx0, propgroup) {
                 tabs.push( this_obj.createPropertyGroupTab( data, propgroup ) ) ;
             });
 
-            //Remove all country-related data values
-            $.each(MetaData.countries, function (idx1, country) {
-                $.each(data, function (key, val) {
-                    if (key.split(':')[0] == country)
-                        delete data[key];
-                });
-            });
-
+            tabs.push( this_obj.createForestPlotTab( snpid, data ) );
             tabs.push( this_obj.createBayesFactorTab( snpid, data ) );
 
 

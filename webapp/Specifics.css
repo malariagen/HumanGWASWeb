@@ -63,6 +63,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd8d8', end
 
 svg {
     border: 1px solid rgb(200,200,200) ;
+    background-color: white ;
 }
 
 .bayes_factor_plot svg rect {
@@ -74,7 +75,32 @@ svg {
     stroke: rgb( 0, 0, 0 ) ;
 }
 
-.bayes_factor_plot .vaxislabel {
+.effect_size_plot svg line {
+    stroke: rgb( 0, 0, 0 ) ;
+}
+
+.effect_size_plot .vertGrid {
+    stroke: rgba( 0, 0, 0, 0.1 ) ;
+}
+
+.hAxisTick .vAxisTick {
+    stroke: rgb( 0, 0, 0 );
+}
+
+.bayes_factor_plot .vAxisLabel {
     text-anchor: end ;
     font-size: 10px ;
+}
+
+.effect_size_plot .frequency_marker {
+    stroke: black ;
+    fill: red ;
+}
+
+.effect_size_plot .OR_marker {
+    stroke: rgb( 255, 255, 255 ) ;
+}
+
+.xAxisLegend, .yAxisLegend {
+    font-weight: bold ;
 }
