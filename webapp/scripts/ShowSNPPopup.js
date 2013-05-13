@@ -504,7 +504,7 @@
             //--> SNP popup content goes here (add items to 'tabs')
 
             //Creation of the PopupFrame
-            var popup = PopupFrame.PopupFrame(Framework.FrameGroupTab(''), {title: snpid, sizeX: 700, sizeY:400 });
+            var popup = PopupFrame.PopupFrame('SnpPopupFrame',Framework.FrameGroupTab(''), {title: snpid, sizeX: 700, sizeY:400 });
             var frameRoot = popup.getFrameRoot();
             frameRoot.setFrameClass('DQXForm');
             frameRoot.setMarginsIndividual(0, 7, 0, 0);
@@ -551,7 +551,7 @@
 
 
         ShowSNPPopup.create2 = function () {//a test function
-            var popup = PopupFrame.PopupFrame(Framework.FrameGroupHor(''), {});
+            var popup = PopupFrame.PopupFrame('testPopupFrame', Framework.FrameGroupHor(''), {title: 'Test' });
             var frameRoot = popup.getFrameRoot();
             frameRoot.setFrameClass('DQXLight');
             frameRoot.setMarginsIndividual(0, 7, 0, 0);
