@@ -30,6 +30,7 @@
             //Populate frame panels
 
             var settForm = Framework.Form(settFrame);
+            //The following checkbox controls the visibility of two form components (cmp1,cmp2) and two panels (stc01,stc02)
             var chk = Controls.Check('', { label: 'Switch', value: true });
             settForm.addControl(chk);
             chk.setOnChanged(function () {
@@ -47,6 +48,8 @@
             cmp2.setLegend('Group 2');
             var showhide2 = Controls.ShowHide(cmp2).setVisible(false);
             settForm.addControl(showhide2);
+
+            settForm.addControl(Controls.Static('<br/>fkjfj dkf kjfdkjf jkgfkj g'));
 
             settForm.render();
 
