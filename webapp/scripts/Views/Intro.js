@@ -1,5 +1,5 @@
-﻿define([DQXSCRQ(), DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("DocEl"), DQXSC("Utils"), "ShowSNPPopup"],
-    function (require, Framework, HistoryManager, Controls, Msg, DocEl, DQX, ShowSNPPopup) {
+﻿define([DQXSCRQ(), DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("Controls"), DQXSC("Msg"), DQXSC("DocEl"), DQXSC("Utils"), "ShowSNPPopup", "PlayGround"],
+    function (require, Framework, HistoryManager, Controls, Msg, DocEl, DQX, ShowSNPPopup, PlayGround) {
 
         var IntroModule = {
 
@@ -115,7 +115,7 @@
                             bitmap: 'Bitmaps/dna3.png',
                             location: buttondiv1,
                             handler: function () {
-                                ShowSNPPopup.create2();
+                                PlayGround.testPopup();
                             }
                         }
                     ];

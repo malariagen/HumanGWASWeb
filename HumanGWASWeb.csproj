@@ -171,6 +171,7 @@
     <Content Include="webapp\scripts\MetaData.js" />
     <Content Include="webapp\scripts\MetaDataDynamic.js" />
     <Content Include="webapp\scripts\Page.js" />
+    <Content Include="webapp\scripts\PlayGround.js" />
     <Content Include="webapp\scripts\require.js" />
     <Content Include="webapp\scripts\ShowGenePopup.js" />
     <Content Include="webapp\scripts\ShowSNPPopup.js" />
