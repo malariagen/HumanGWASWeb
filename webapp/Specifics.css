@@ -24,7 +24,7 @@ background: linear-gradient(to bottom, rgb(255,216,216) 0%,rgb(255,242,242) 45%,
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd8d8', endColorstr='#ffafaf',GradientType=0 );
 }
 
-.DQXFloatBox
+.DQXFloatBox, .DQXPopupFrame
 { 
     border-width:2px;
     border-radius: 5px ;
@@ -35,7 +35,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd8d8', end
     padding: 5px ;
 }
 
-.DQXFloatBoxHeader
+.DQXFloatBoxHeader, .DQXPopupFrameHeader
 { 
     background-image:none;
     background-color: white ;
@@ -48,7 +48,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd8d8', end
 }
 
 
-.DQXFloatBoxContent
+.DQXFloatBoxContent, .DQXPopupFrameContent
 {
     font: serif ;
     font-size: 10px ;
