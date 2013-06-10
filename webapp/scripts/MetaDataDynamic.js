@@ -1,4 +1,4 @@
-﻿define([DQXSC("Utils"), DQXSC("SQL"), DQXSC("DataFetcher/DataFetchers"), "MetaData"],
+﻿define(["DQX/Utils", "DQX/SQL", "DQX/DataFetcher/DataFetchers", "MetaData"],
     function (DQX, SQL, DataFetcher, MetaData) {
         var MetaDataDynamic = {};
 

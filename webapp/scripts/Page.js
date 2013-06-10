@@ -1,4 +1,4 @@
-﻿define([DQXSC("Framework"), DQXSC("HistoryManager"), DQXSC("DocEl"), DQXSC("Msg"), "Views/Intro", "Views/GenomeBrowser", "MetaDataDynamic", "ShowSNPPopup", "ShowGenePopup"],
+﻿define(["DQX/Framework", "DQX/HistoryManager", "DQX/DocEl", "DQX/Msg", "Views/Intro", "Views/GenomeBrowser", "MetaDataDynamic", "ShowSNPPopup", "ShowGenePopup"],
     function (Framework, HistoryManager, DocEl, Msg, IntroModule, GenomeBrowserModule, MetaDataDynamic, ShowSNPPopup, ShowGenePopup) {
         thePage = {
 
